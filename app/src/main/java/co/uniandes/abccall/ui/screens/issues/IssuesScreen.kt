@@ -17,6 +17,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import co.uniandes.abccall.R
+import co.uniandes.abccall.ui.navigation.BottomBar
 import co.uniandes.abccall.ui.navigation.Screen.Main.CreateIssue
 
 @Composable
@@ -36,7 +37,10 @@ fun IssuesScreen(navController: NavController) {
                 )
             }
         },
-        floatingActionButtonPosition = FabPosition.End
+        floatingActionButtonPosition = FabPosition.End,
+        bottomBar = {
+            BottomBar(navController)
+        }
     ) { innerPadding ->
         Box(
             modifier = Modifier

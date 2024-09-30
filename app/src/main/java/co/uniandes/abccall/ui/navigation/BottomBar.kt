@@ -9,25 +9,23 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
-import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.NavHostController
+import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import co.uniandes.abccall.ui.navigation.Screen.Main
 
 @Composable
 fun BottomBar(
-    navController: NavHostController
+    navController: NavController
 ) {
     val navigationScreen = listOf(Main.Issues, Main.Chat, Main.Settings)
 
     NavigationBar {
-
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry?.destination?.route
 
         navigationScreen.forEach { item ->
             NavigationBarItem(
-                selected = currentRoute == item.route,
+                selected = item.route == currentRoute,
                 label = {
                     Text(text = stringResource(id = item.title!!))
                 },
@@ -46,13 +44,7 @@ fun BottomBar(
                     indicatorColor = MaterialTheme.colorScheme.tertiary
                 ),
                 onClick = {
-                    navController.navigate(item.route) {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
-                        }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
+                    navController.bottomNavigate(item.route)
                 },
             )
         }

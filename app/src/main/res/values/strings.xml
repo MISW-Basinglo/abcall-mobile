@@ -2,6 +2,10 @@
 
     <string name="app_name">ABCcall</string>
 
+    <string name="email">Correo</string>
+    <string name="password">Contraseña</string>
+    <string name="access">Ingresar</string>
+
     <string name="issues">Incidentes</string>
     <string name="create_issue">Crear incidente</string>
 

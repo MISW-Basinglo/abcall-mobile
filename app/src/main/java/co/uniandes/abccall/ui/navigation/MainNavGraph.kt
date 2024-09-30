@@ -23,15 +23,15 @@ fun NavGraphBuilder.mainNavGraph(
         }
 
         composable(route = Main.CreateIssue.route) {
-            CreateIssueScreen()
+            CreateIssueScreen(navController)
         }
 
         composable(route = Main.Chat.route) {
-            ChatScreen()
+            ChatScreen(navController)
         }
 
         composable(route = Main.Settings.route) {
-            SettingsScreen()
+            SettingsScreen(navController)
         }
 
     }

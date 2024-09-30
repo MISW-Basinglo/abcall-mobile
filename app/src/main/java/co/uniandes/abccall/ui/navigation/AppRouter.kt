@@ -34,7 +34,7 @@ sealed class Screen(val route: String) {
             selectedIcon = Icons.Filled.List,
             unselectedIcon = Icons.Outlined.List,
         )
-        data object CreateIssue: TopLevelDestination( Route.CREATE_ISSUE)
+        data object CreateIssue: TopLevelDestination(Route.CREATE_ISSUE)
         data object Chat: TopLevelDestination(
             route = Route.CHAT,
             title = R.string.chat,
