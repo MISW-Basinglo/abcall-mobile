@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import co.uniandes.abccall.R
 import co.uniandes.abccall.ui.navigation.Screen
+import co.uniandes.abccall.ui.navigation.goMain
 
 @Composable
 fun LoginScreen(navController: NavController) {
@@ -60,7 +61,7 @@ fun LoginScreen(navController: NavController) {
         )
 
         Button(
-            onClick = { navController.navigate(Screen.Main.route) },
+            onClick = { navController.goMain() },
             modifier = Modifier.padding(top = 16.dp)
         ) {
             Text(text = stringResource(id = R.string.access))
