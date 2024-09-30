@@ -4,8 +4,10 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NamedNavArgument
 import co.uniandes.abccall.R
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Chat
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Send
+import androidx.compose.material.icons.outlined.Chat
 import androidx.compose.material.icons.outlined.List
 import androidx.compose.material.icons.outlined.Send
 import androidx.compose.material.icons.outlined.Settings
@@ -38,8 +40,8 @@ sealed class Screen(val route: String) {
         data object Chat: TopLevelDestination(
             route = Route.CHAT,
             title = R.string.chat,
-            selectedIcon = Icons.Filled.Send,
-            unselectedIcon = Icons.Outlined.Send,
+            selectedIcon = Icons.Filled.Chat,
+            unselectedIcon = Icons.Outlined.Chat,
         )
         data object Settings: TopLevelDestination(
             route = Route.SETTINGS,
