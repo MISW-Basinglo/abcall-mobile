@@ -1,6 +1,6 @@
 <resources>
 
-    <string name="app_name">ABCcall</string>
+    <string name="app_name">ABCall</string>
     <string name="not_implemented">Funcionalidad no implementada</string>
     <string name="description">Descripción</string>
     <string name="create">Crear</string>
