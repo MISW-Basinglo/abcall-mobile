@@ -23,7 +23,7 @@ fun IssueItem(item: Issue) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = item.title,
+                text = item.type,
                 style = MaterialTheme.typography.headlineLarge
             )
             Text(

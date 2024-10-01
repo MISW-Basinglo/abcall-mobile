@@ -1,14 +1,11 @@
 package co.uniandes.abcall.ui.screens.chat
 
-import android.widget.Space
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -23,11 +20,10 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -35,18 +31,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import co.uniandes.abcall.R
 import co.uniandes.abcall.data.models.Message
 import co.uniandes.abcall.ui.navigation.BottomBar
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 @Composable
-fun ChatScreen(navController: NavController) {
+fun ChatScreen(navController: NavController, viewModel: ChatViewModel = hiltViewModel()) {
     var messageText by remember { mutableStateOf("") }
-    val messages = remember { mutableStateListOf<Message>() }
-    val coroutineScope = rememberCoroutineScope()
+    val messages by viewModel.messages.observeAsState(emptyList())
     val listState = rememberLazyListState()
 
     Scaffold(
@@ -82,18 +76,8 @@ fun ChatScreen(navController: NavController) {
                     onMessageChange = { messageText = it },
                     onSendMessage = {
                         if (messageText.isNotBlank()) {
-                            messages.add(0, Message(text = messageText, isUser = true))
+                            viewModel.sendMessage(messageText)
                             messageText = ""
-                            coroutineScope.launch {
-                                delay(1000)
-                                messages.add(
-                                    0,
-                                    Message(
-                                        text = "Respuesta automática: ${messages.size}",
-                                        isUser = false
-                                    )
-                                )
-                            }
                         }
                     }
                 )

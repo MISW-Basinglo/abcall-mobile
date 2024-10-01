@@ -1,4 +1,7 @@
 package co.uniandes.abcall.ui.screens.settings
+import android.widget.Toast
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -8,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -18,6 +22,8 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -26,14 +32,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import co.uniandes.abcall.R
+import co.uniandes.abcall.data.models.UpdateState
 import co.uniandes.abcall.ui.navigation.BottomBar
 import co.uniandes.abcall.ui.navigation.goAuth
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsScreen(navController: NavController) {
+fun SettingsScreen(navController: NavController, viewModel: SettingsViewModel = hiltViewModel()) {
+
+    val updateState by viewModel.updateState.observeAsState(UpdateState.Idle)
 
     val nameState = remember { mutableStateOf("") }
     val emailState = remember { mutableStateOf("") }
@@ -72,6 +82,7 @@ fun SettingsScreen(navController: NavController) {
                     )
 
                     OutlinedTextField(
+                        enabled = false,
                         value = nameState.value,
                         onValueChange = { nameState.value = it },
                         label = { Text(
@@ -89,6 +100,7 @@ fun SettingsScreen(navController: NavController) {
                     )
 
                     OutlinedTextField(
+                        enabled = false,
                         value = emailState.value,
                         onValueChange = { emailState.value = it },
                         label = { Text(
@@ -107,6 +119,7 @@ fun SettingsScreen(navController: NavController) {
                     )
 
                     OutlinedTextField(
+                        enabled = false,
                         value = phoneState.value,
                         onValueChange = { phoneState.value = it },
                         label = { Text(
@@ -159,7 +172,6 @@ fun SettingsScreen(navController: NavController) {
                             }
                         }
                     }
-
                 }
 
                 Row(
@@ -174,7 +186,9 @@ fun SettingsScreen(navController: NavController) {
                         )
                     }
                     Button(
-                        onClick = {  }
+                        onClick = {
+                            viewModel.updateChannel(channelState.value)
+                        }
                     ) {
                         Text(
                             text = stringResource(id = R.string.update).uppercase(),
@@ -182,9 +196,33 @@ fun SettingsScreen(navController: NavController) {
                         )
                     }
                 }
-
             }
 
+            when (updateState) {
+                is UpdateState.Loading -> {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(Color.Gray.copy(alpha = 0.5f))
+                            .clickable(enabled = false) {}
+                    ) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.align(Alignment.Center),
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
+                is UpdateState.Success -> {
+                    viewModel.resetState()
+                    Toast.makeText(navController.context, stringResource(id = R.string.successful), Toast.LENGTH_SHORT).show()
+                }
+                is UpdateState.Error -> {
+                    viewModel.resetState()
+                    val errorMessage = (updateState as UpdateState.Error).message
+                    Toast.makeText(navController.context, errorMessage, Toast.LENGTH_SHORT).show()
+                }
+                else -> {}
+            }
         }
     }
 }

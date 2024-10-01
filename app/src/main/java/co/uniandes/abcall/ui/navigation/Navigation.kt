@@ -28,6 +28,10 @@ fun NavController.bottomNavigate(route: String) {
     }
 }
 
+fun NavController.goCreateIssue() {
+    this.navigate(Screen.Main.CreateIssue.route)
+}
+
 fun NavController.goBack() {
     this.popBackStack()
 }

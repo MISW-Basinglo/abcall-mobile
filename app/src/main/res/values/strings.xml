@@ -6,6 +6,7 @@
     <string name="create">Crear</string>
     <string name="cancel">Cancel</string>
     <string name="update">Actualizar</string>
+    <string name="successful">Operación exitosa</string>
 
     <string name="email">Correo</string>
     <string name="password">Contraseña</string>

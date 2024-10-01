@@ -63,8 +63,10 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.material3.icons.extended)
     implementation(libs.androidx.navigation)
+    implementation(libs.androidx.navigation.compose)
 
     implementation(libs.dagger.hilt)
+    implementation(libs.androidx.runtime.livedata)
     kapt(libs.dagger.hilt.compiler)
 
 
