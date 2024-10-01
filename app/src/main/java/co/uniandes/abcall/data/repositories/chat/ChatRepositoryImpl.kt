@@ -1,12 +1,15 @@
 package co.uniandes.abcall.data.repositories.chat
 
-import co.uniandes.abcall.data.models.Issue
+import co.uniandes.abcall.networking.AbcallApi
+import co.uniandes.abcall.networking.MessageRequest
 import javax.inject.Inject
 
-class ChatRepositoryImpl @Inject constructor(): ChatRepository {
+class ChatRepositoryImpl @Inject constructor(
+    private val api: AbcallApi
+): ChatRepository {
 
-    override fun sendMessage(message: String): List<Issue> {
-        TODO("Not yet implemented")
+    override suspend fun sendMessage(message: String) {
+        //api.sendMessage(MessageRequest(message))
     }
 
 }

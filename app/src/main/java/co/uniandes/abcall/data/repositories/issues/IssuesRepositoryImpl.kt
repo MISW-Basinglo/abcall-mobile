@@ -1,12 +1,16 @@
 package co.uniandes.abcall.data.repositories.issues
 
 import co.uniandes.abcall.data.models.Issue
+import co.uniandes.abcall.networking.AbcallApi
+import co.uniandes.abcall.networking.IssueRequest
 import javax.inject.Inject
 
-class IssuesRepositoryImpl @Inject constructor(): IssuesRepository {
+class IssuesRepositoryImpl @Inject constructor(
+    private val api: AbcallApi
+): IssuesRepository {
 
-    override fun getIssues(): List<Issue> {
-
+    override suspend fun getIssues(): List<Issue> {
+        //return api.getIssues()
         return listOf(
             Issue(
                 "Título 1",
@@ -29,8 +33,8 @@ class IssuesRepositoryImpl @Inject constructor(): IssuesRepository {
         )
     }
 
-    override fun createIssue(type: String, description: String) {
-
+    override suspend fun createIssue(type: String, description: String) {
+        //api.createIssue(IssueRequest(type, description))
     }
 
 }
