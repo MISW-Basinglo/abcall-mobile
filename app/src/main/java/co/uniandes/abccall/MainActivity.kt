@@ -9,7 +9,7 @@ import co.uniandes.abccall.ui.theme.ABCcallTheme
 
 class MainActivity : ComponentActivity() {
 
-    private var isAuthenticated = true
+    private var isAuthenticated = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

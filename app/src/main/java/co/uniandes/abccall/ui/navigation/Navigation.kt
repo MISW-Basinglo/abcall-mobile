@@ -9,6 +9,13 @@ fun NavController.goMain() {
     }
 }
 
+fun NavController.goAuth() {
+    this.navigate(Screen.Auth.route){
+        popUpTo(this@goAuth.graph.startDestinationId)
+        launchSingleTop = true
+    }
+}
+
 fun NavController.bottomNavigate(route: String) {
     this.navigate(route) {
         this@bottomNavigate.graph.startDestinationRoute?.let { screenRoute ->

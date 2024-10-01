@@ -150,7 +150,6 @@ fun CreateIssueScreen(navController: NavController) {
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-
                     OutlinedButton(
                         onClick = { navController.goBack() }
                     ) {
@@ -159,7 +158,6 @@ fun CreateIssueScreen(navController: NavController) {
                             style = MaterialTheme.typography.headlineSmall
                         )
                     }
-
                     Button(
                         onClick = { navController.goBack() }
                     ) {
@@ -168,7 +166,6 @@ fun CreateIssueScreen(navController: NavController) {
                             style = MaterialTheme.typography.headlineSmall
                         )
                     }
-
                 }
 
             }
