@@ -6,7 +6,9 @@ import androidx.activity.compose.setContent
 import androidx.navigation.compose.rememberNavController
 import co.uniandes.abcall.ui.navigation.RootNavGraph
 import co.uniandes.abcall.ui.theme.ABCallTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private var isAuthenticated = true

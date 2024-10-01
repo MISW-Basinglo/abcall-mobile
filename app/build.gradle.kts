@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    kotlin("kapt")
+    alias(libs.plugins.dagger.hilt)
 }
 
 android {
@@ -62,6 +64,10 @@ dependencies {
     implementation(libs.androidx.material3.icons.extended)
     implementation(libs.androidx.navigation)
 
+    implementation(libs.dagger.hilt)
+    kapt(libs.dagger.hilt.compiler)
+
+
     testImplementation(libs.junit)
 
     androidTestImplementation(libs.androidx.junit)
@@ -71,4 +77,8 @@ dependencies {
 
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+}
+
+kapt {
+    correctErrorTypes = true
 }
