@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "co.uniandes.abccall"
+    namespace = "co.uniandes.abcall"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "co.uniandes.abccall"
+        applicationId = "co.uniandes.abcall"
         minSdk = 26
         targetSdk = 34
         versionCode = 1
