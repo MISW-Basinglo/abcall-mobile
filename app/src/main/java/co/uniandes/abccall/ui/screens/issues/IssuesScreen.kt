@@ -1,8 +1,10 @@
 package co.uniandes.abccall.ui.screens.issues
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.Divider
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -13,15 +15,40 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import co.uniandes.abccall.R
+import co.uniandes.abccall.data.models.Issue
+import co.uniandes.abccall.ui.components.IssueItem
 import co.uniandes.abccall.ui.navigation.BottomBar
 import co.uniandes.abccall.ui.navigation.Screen.Main.CreateIssue
 
 @Composable
 fun IssuesScreen(navController: NavController) {
+
+    val items = listOf(
+        Issue(
+            "Título 1",
+            "Lorem ipsum dolor sit amet consectetur adipiscing elit turpis, porta litora risus penatibus curabitur et enim egestas...",
+            "29/02/2024 18:50:33",
+            "Cerrado"
+        ),
+        Issue(
+            "Título 2",
+            "Lorem ipsum dolor sit amet consectetur adipiscing elit turpis, porta litora risus penatibus curabitur et enim egestas...",
+            "29/02/2024 18:50:33",
+            "Escalado"
+        ),
+        Issue(
+            "Título 3",
+            "Lorem ipsum dolor sit amet consectetur adipiscing elit turpis, porta litora risus penatibus curabitur et enim egestas...",
+            "29/02/2024 18:50:33",
+            "Abierto"
+        ),
+    )
+
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
@@ -49,12 +76,29 @@ fun IssuesScreen(navController: NavController) {
         ) {
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxSize()
                     .padding(16.dp),
-                verticalArrangement = Arrangement.Top,
-                horizontalAlignment = Alignment.Start
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(text = stringResource(id = R.string.issues).uppercase())
+                Text(
+                    modifier = Modifier.padding(top = 55.dp, bottom = 83.dp ),
+                    text = stringResource(id = R.string.issues).uppercase(),
+                    color = MaterialTheme.colorScheme.secondary,
+                    style = MaterialTheme.typography.titleLarge
+                )
+
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(items.size) { index ->
+                        val item = items[index]
+                        IssueItem(item)
+                        if (index < items.size - 1) {
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Divider(color = colorResource(id = R.color.grey_light))
+                        }
+                    }
+                }
             }
         }
     }

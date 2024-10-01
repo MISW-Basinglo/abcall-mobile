@@ -52,11 +52,11 @@ fun LoginScreen(navController: NavController) {
             onValueChange = { emailState.value = it },
             label = { Text(
                     text = stringResource(id = R.string.email),
-                    style = MaterialTheme.typography.bodyLarge
+                    style = MaterialTheme.typography.bodyMedium
             ) },
             placeholder = { Text(
                 text = stringResource(id = R.string.email),
-                style = MaterialTheme.typography.bodyLarge,
+                style = MaterialTheme.typography.bodyMedium,
                 color = Color.Gray
             ) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
@@ -70,11 +70,11 @@ fun LoginScreen(navController: NavController) {
             onValueChange = { passwordState.value = it },
             label = { Text(
                 text = stringResource(id = R.string.password),
-                style = MaterialTheme.typography.bodyLarge
+                style = MaterialTheme.typography.bodyMedium
             ) },
             placeholder = { Text(
                 text = stringResource(id = R.string.password),
-                style = MaterialTheme.typography.bodyLarge,
+                style = MaterialTheme.typography.bodyMedium,
                 color = Color.Gray
             ) },
             visualTransformation = PasswordVisualTransformation(),
@@ -90,7 +90,7 @@ fun LoginScreen(navController: NavController) {
         ) {
             Text(
                 text = stringResource(id = R.string.access).uppercase(),
-                style = MaterialTheme.typography.headlineLarge
+                style = MaterialTheme.typography.headlineSmall
             )
         }
 
@@ -100,11 +100,11 @@ fun LoginScreen(navController: NavController) {
         ) {
             Text(
                 text = stringResource(id = R.string.no_account),
-                style = MaterialTheme.typography.bodyLarge
+                style = MaterialTheme.typography.bodyMedium
             )
             Text(
                 text = stringResource(id = R.string.sign_up),
-                style = MaterialTheme.typography.headlineSmall,
+                style = MaterialTheme.typography.headlineMedium,
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.clickable {
                     Toast.makeText(
@@ -118,7 +118,7 @@ fun LoginScreen(navController: NavController) {
 
         Text(
             text = stringResource(id = R.string.forgot_password),
-            style = MaterialTheme.typography.headlineSmall,
+            style = MaterialTheme.typography.headlineMedium,
             color = MaterialTheme.colorScheme.primary,
             modifier = Modifier.clickable {
                 Toast.makeText(
