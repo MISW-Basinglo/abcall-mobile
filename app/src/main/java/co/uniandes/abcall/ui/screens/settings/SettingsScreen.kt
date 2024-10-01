@@ -83,7 +83,6 @@ fun SettingsScreen(navController: NavController) {
                             style = MaterialTheme.typography.bodyMedium,
                             color = Color.Gray
                         ) },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 8.dp)
@@ -119,7 +118,7 @@ fun SettingsScreen(navController: NavController) {
                             style = MaterialTheme.typography.bodyMedium,
                             color = Color.Gray
                         ) },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 8.dp)

@@ -14,7 +14,7 @@ import androidx.compose.ui.graphics.Color
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBar(title: String, navigationAction: () -> Unit = {}) {
+fun TopBar(title: String, navigationAction: () -> Unit = {}, actionContentDescription: String? = null) {
     TopAppBar(
         title = {
             Text(
@@ -26,7 +26,7 @@ fun TopBar(title: String, navigationAction: () -> Unit = {}) {
             IconButton(onClick = {navigationAction() }) {
                 Icon(
                     imageVector = Icons.Default.ArrowBack,
-                    contentDescription = "Back",
+                    contentDescription = actionContentDescription,
                     tint = Color.White
                 )
             }

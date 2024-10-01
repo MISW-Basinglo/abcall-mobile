@@ -59,7 +59,7 @@ fun IssuesScreen(navController: NavController) {
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
-                    contentDescription = "Create Issue",
+                    contentDescription = stringResource(id = R.string.issue_create_content_description),
                     tint = Color.White
                 )
             }

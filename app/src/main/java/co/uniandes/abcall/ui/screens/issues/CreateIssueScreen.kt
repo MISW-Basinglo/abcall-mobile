@@ -27,7 +27,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import co.uniandes.abcall.R
@@ -46,7 +45,8 @@ fun CreateIssueScreen(navController: NavController) {
         topBar = {
             TopBar(
                 title = stringResource(id = R.string.create_issue).uppercase(),
-                navigationAction = { navController.goBack() }
+                navigationAction = { navController.goBack() },
+                actionContentDescription = stringResource(id = R.string.issue_back_content_description)
             )
         }
     ) { innerPadding ->
@@ -76,7 +76,7 @@ fun CreateIssueScreen(navController: NavController) {
                             onValueChange = { },
                             trailingIcon = {
                                 ExposedDropdownMenuDefaults.TrailingIcon(
-                                    expanded = expanded.value
+                                    expanded = expanded.value,
                                 )
                             },
                             label = { Text(text = stringResource(id = R.string.type_issue)) },
@@ -119,7 +119,6 @@ fun CreateIssueScreen(navController: NavController) {
                             style = MaterialTheme.typography.bodyMedium,
                             color = Color.Gray
                         ) },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(200.dp)
