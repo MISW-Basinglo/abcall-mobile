@@ -2,6 +2,9 @@
 
     <string name="app_name">ABCcall</string>
     <string name="not_implemented">Funcionalidad no implementada</string>
+    <string name="description">Descripción</string>
+    <string name="create">Crear</string>
+    <string name="cancel">Cancel</string>
 
     <string name="email">Correo</string>
     <string name="password">Contraseña</string>
@@ -10,9 +13,14 @@
     <string name="sign_up">Registrate</string>">
     <string name="forgot_password">¿Olvidó su contraseña?</string>
 
-
     <string name="issues">Incidentes</string>
     <string name="create_issue">Crear incidente</string>
+    <string name="type_issue">Tipo de incidente</string>
+    <string name="recommendations">Recomendaciones:</string>
+    <string name="recommendations_body">Al completar el campo de descripción, asegúrate de incluir información clara y detallada sobre el incidente. Describe el problema específico que estás enfrentando, incluyendo pasos que llevaron al inconveniente, cualquier mensaje de error que hayas recibido y el impacto que tiene en tu actividad. Cuanta más información proporciones, más fácil será para nuestro equipo entender y resolver tu solicitud de manera eficiente.
+
+</string>
+
 
     <string name="chat">Chatbot</string>
 
