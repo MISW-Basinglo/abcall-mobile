@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import co.uniandes.abcall.R
 import co.uniandes.abcall.data.models.Issue
@@ -27,7 +28,7 @@ fun IssueItem(item: Issue) {
                 style = MaterialTheme.typography.headlineLarge
             )
             Text(
-                text = item.status,
+                text = getText(item.status),
                 style = MaterialTheme.typography.headlineLarge,
                 color = getStatusColor(item.status)
             )
@@ -53,3 +54,14 @@ fun getStatusColor(status: String): Color {
         else -> Color.Black
     }
 }
+
+@Composable
+fun getText(status: String): String {
+    return when (status) {
+        "Cerrado" -> stringResource(id = R.string.issue_closed)
+        "Escalado" -> stringResource(id = R.string.issue_scaled)
+        "Abierto" -> stringResource(id = R.string.issue_opened)
+        else -> ""
+    }
+}
+
