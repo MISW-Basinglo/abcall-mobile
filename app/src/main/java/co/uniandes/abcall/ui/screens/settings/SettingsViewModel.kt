@@ -32,6 +32,12 @@ class SettingsViewModel  @Inject constructor(
         }
     }
 
+    fun logout() {
+        viewModelScope.launch {
+            repository.logout()
+        }
+    }
+
     fun resetState() {
         _updateState.value = UpdateState.Idle
     }

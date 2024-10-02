@@ -32,3 +32,7 @@ data class IssueResponse(
 data class SuggestResponse(
     @SerializedName("description") val description: String
 )
+
+data class LoginResponse(
+    @SerializedName("token") val token: String
+)

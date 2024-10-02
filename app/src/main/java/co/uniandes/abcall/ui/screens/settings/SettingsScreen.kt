@@ -178,7 +178,10 @@ fun SettingsScreen(navController: NavController, viewModel: SettingsViewModel = 
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     OutlinedButton(
-                        onClick = { navController.goAuth() }
+                        onClick = {
+                            viewModel.logout()
+                            navController.goAuth()
+                        }
                     ) {
                         Text(
                             text = stringResource(id = R.string.sign_out).uppercase(),
