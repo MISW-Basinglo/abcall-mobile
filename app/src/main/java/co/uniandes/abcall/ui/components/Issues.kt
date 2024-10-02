@@ -49,8 +49,8 @@ fun IssueItem(item: Issue) {
 fun getStatusColor(status: String): Color {
     return when (status) {
         "Cerrado" -> colorResource(id = R.color.green)
-        "Escalado" -> colorResource(id = R.color.orange)
-        "Abierto" -> colorResource(id = R.color.red)
+        "Escalado" -> colorResource(id = R.color.red)
+        "Abierto" -> colorResource(id = R.color.orange)
         else -> Color.Black
     }
 }
