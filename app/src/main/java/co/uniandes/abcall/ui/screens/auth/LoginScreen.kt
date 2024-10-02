@@ -35,6 +35,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import co.uniandes.abcall.R
 import co.uniandes.abcall.data.models.UpdateState
+import co.uniandes.abcall.ui.components.FullLoading
 import co.uniandes.abcall.ui.navigation.goMain
 
 @SuppressLint("UnrememberedMutableState")
@@ -151,17 +152,7 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = hiltVi
 
         when (updateState) {
             is UpdateState.Loading -> {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(Color.Gray.copy(alpha = 0.5f))
-                        .clickable(enabled = false) {}
-                ) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.align(Alignment.Center),
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                }
+                FullLoading()
             }
             is UpdateState.Success -> {
                 viewModel.resetState()

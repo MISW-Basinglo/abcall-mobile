@@ -1,8 +1,6 @@
 package co.uniandes.abcall.ui.screens.issues
 
 import android.widget.Toast
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,12 +9,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
@@ -30,16 +29,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import co.uniandes.abcall.R
+import co.uniandes.abcall.data.models.IAState
 import co.uniandes.abcall.data.models.UpdateState
+import co.uniandes.abcall.ui.components.FullLoading
 import co.uniandes.abcall.ui.navigation.TopBar
 import co.uniandes.abcall.ui.navigation.goBack
-import co.uniandes.abcall.ui.navigation.goMain
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -50,6 +52,10 @@ fun CreateIssueScreen(navController: NavController, viewModel: CreateIssueViewMo
     val typeOptions = listOf("Salud", "Ciencia", "Tecnología")
 
     val updateState by viewModel.updateState.observeAsState(UpdateState.Idle)
+    val iaState by viewModel.iaState.observeAsState(IAState.Idle)
+    val suggestState by viewModel.suggestState.observeAsState("")
+
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     Scaffold(
         topBar = {
@@ -74,7 +80,8 @@ fun CreateIssueScreen(navController: NavController, viewModel: CreateIssueViewMo
             ) {
 
                 Column(
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     ExposedDropdownMenuBox(
                         expanded = expanded.value,
@@ -141,18 +148,55 @@ fun CreateIssueScreen(navController: NavController, viewModel: CreateIssueViewMo
                         modifier = Modifier.align(Alignment.End)
                     )
 
-                    Text(
-                        modifier = Modifier.padding(top = 43.dp, bottom = 8.dp),
-                        text = stringResource(id = R.string.recommendations),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = Color.Gray,
-                    )
+                    when (iaState) {
+                        is IAState.Loading -> {
+                            FullLoading(color = Color.White)
+                        }
+                        is IAState.Success -> {
+                            viewModel.resetState()
+                        }
+                        is IAState.Error -> {
+                            viewModel.resetState()
+                            val errorMessage = (iaState as IAState.Error).message
+                            Toast.makeText(navController.context, errorMessage, Toast.LENGTH_SHORT).show()
+                        }
+                        else -> {
+                            Button(
+                                enabled = typeState.value.isNotEmpty() && descriptionState.value.isNotEmpty(),
+                                onClick = {
+                                    keyboardController?.hide()
+                                    viewModel.suggestIssue(descriptionState.value)
+                                }
+                            ) {
 
-                    Text(
-                        text = stringResource(id = R.string.recommendations_body),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = colorResource(id = R.color.grey_medium),
-                    )
+                                Text(
+                                    text = stringResource(id = R.string.suggest).uppercase(),
+                                    style = MaterialTheme.typography.headlineSmall
+                                )
+
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_gemini),
+                                    contentDescription = stringResource(id = R.string.suggest_content_description),
+                                    modifier = Modifier.size(30.dp).padding(start = 5.dp)
+                                )
+                            }
+                        }
+                    }
+
+                    if(suggestState.isNotEmpty()){
+                        Text(
+                            modifier = Modifier.padding(top = 43.dp, bottom = 8.dp),
+                            text = stringResource(id = R.string.recommendations),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = Color.Gray,
+                        )
+
+                        Text(
+                            text = suggestState,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = colorResource(id = R.color.grey_medium),
+                        )
+                    }
 
                 }
 
@@ -168,6 +212,7 @@ fun CreateIssueScreen(navController: NavController, viewModel: CreateIssueViewMo
                         )
                     }
                     Button(
+                        enabled = typeState.value.isNotEmpty() && descriptionState.value.isNotEmpty(),
                         onClick = { viewModel.createIssue(typeState.value, descriptionState.value) }
                     ) {
                         Text(
@@ -181,17 +226,7 @@ fun CreateIssueScreen(navController: NavController, viewModel: CreateIssueViewMo
 
             when (updateState) {
                 is UpdateState.Loading -> {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(Color.Gray.copy(alpha = 0.5f))
-                            .clickable(enabled = false) {}
-                    ) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.align(Alignment.Center),
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                    }
+                    FullLoading()
                 }
                 is UpdateState.Success -> {
                     viewModel.resetState()

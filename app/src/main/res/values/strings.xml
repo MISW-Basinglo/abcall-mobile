@@ -21,7 +21,9 @@
     <string name="issue_create_content_description">Este botón permite crear un nuevo incidente</string>
     <string name="type_issue">Tipo de incidente</string>
     <string name="recommendations">Recomendaciones:</string>
-    <string name="recommendations_body">Al completar el campo de descripción, asegúrate de incluir información clara y detallada sobre el incidente. Describe el problema específico que estás enfrentando, incluyendo pasos que llevaron al inconveniente, cualquier mensaje de error que hayas recibido y el impacto que tiene en tu actividad. Cuanta más información proporciones, más fácil será para nuestro equipo entender y resolver tu solicitud de manera eficiente.</string>
+    <string name="suggest">Sugerir solución con IA</string>
+    <string name="suggest_content_description">Este botón permite sugerir una solución con IA"></string>
+
 
     <string name="chat">Chatbot</string>
     <string name="chat_input">Escribe un mensaje...</string>

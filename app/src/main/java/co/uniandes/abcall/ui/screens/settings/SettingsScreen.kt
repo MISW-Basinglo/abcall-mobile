@@ -186,6 +186,7 @@ fun SettingsScreen(navController: NavController, viewModel: SettingsViewModel = 
                         )
                     }
                     Button(
+                        enabled = channelState.value.isNotEmpty(),
                         onClick = {
                             viewModel.updateChannel(channelState.value)
                         }

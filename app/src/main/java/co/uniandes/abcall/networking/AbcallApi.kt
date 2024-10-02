@@ -23,4 +23,7 @@ interface AbcallApi {
     @POST("issues")
     suspend fun createIssue(@Body request: IssueRequest)
 
+    @POST("issues")
+    suspend fun suggestIssue(@Body request: SuggestRequest): Response<SuggestResponse>
+
 }
