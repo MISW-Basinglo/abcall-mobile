@@ -1,0 +1,44 @@
+<resources>
+
+    <string name="app_name">ABCall</string>
+    <string name="not_implemented">Funcionalidad no implementada</string>
+    <string name="description">Descripción</string>
+    <string name="create">Crear</string>
+    <string name="cancel">Cancel</string>
+    <string name="update">Actualizar</string>
+    <string name="successful">Operación exitosa</string>
+
+    <string name="email">Correo</string>
+    <string name="password">Contraseña</string>
+    <string name="access">Ingresar</string>
+    <string name="no_account">¿Aún no tienes una cuenta?</string>
+    <string name="sign_up">Registrate</string>
+    <string name="forgot_password">¿Olvidó su contraseña?</string>
+
+    <string name="issues">Incidentes</string>
+    <string name="create_issue">Crear incidente</string>
+    <string name="issue_closed">Cerrado</string>
+    <string name="issue_scaled">Escalado</string>
+    <string name="issue_opened">Abierto</string>
+    <string name="issue_back_content_description">Este botón permite volver al listado de incidente</string>
+    <string name="issue_create_content_description">Este botón permite crear un nuevo incidente</string>
+    <string name="type_issue">Tipo de incidente</string>
+    <string name="recommendations">Recomendaciones:</string>
+    <string name="suggest">Sugerir solución con IA</string>
+    <string name="suggest_content_description">Este botón permite sugerir una solución con IA"></string>
+
+
+    <string name="chat">Chatbot</string>
+    <string name="chat_input">Escribe un mensaje...</string>
+    <string name="chat_send_content_description">Este botón permite enviar el contenido del chat</string>
+    <string name="chat_user">Usuario</string>
+    <string name="chat_channel">Canal de atención</string>
+
+    <string name="settings">Configuraciones</string>
+    <string name="profile">Perfil</string>
+    <string name="name">Nombre</string>
+    <string name="phone">Teléfono</string>
+    <string name="channel">Canal de comunicación</string>
+    <string name="sign_out">Cerrar sesión</string>
+
+</resources>

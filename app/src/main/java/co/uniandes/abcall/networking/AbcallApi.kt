@@ -9,7 +9,7 @@ import retrofit2.http.PUT
 interface AbcallApi {
 
     @POST("auth/login")
-    suspend fun login(@Body request: LoginRequest)
+    suspend fun login(@Body request: LoginRequest): Response<LoginResponse>
 
     @PUT("user/update-channel")
     suspend fun updateChannel(@Body request: ChannelUpdateRequest)
@@ -22,5 +22,8 @@ interface AbcallApi {
 
     @POST("issues")
     suspend fun createIssue(@Body request: IssueRequest)
+
+    @POST("issues")
+    suspend fun suggestIssue(@Body request: SuggestRequest): Response<SuggestResponse>
 
 }

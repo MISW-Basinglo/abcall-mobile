@@ -1,11 +1,17 @@
 package co.uniandes.abcall.di
 
+import android.content.Context
 import co.uniandes.abcall.networking.AbcallApi
+import co.uniandes.abcall.networking.AuthInterceptor
+import co.uniandes.abcall.storage.LocalStorage
+import co.uniandes.abcall.storage.SharedPreferencesManager
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -24,8 +30,10 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(): OkHttpClient {
-        return OkHttpClient.Builder().build()
+    fun provideOkHttpClient(localStorage: LocalStorage): OkHttpClient {
+        return OkHttpClient.Builder()
+            .addInterceptor(AuthInterceptor(localStorage))
+            .build()
     }
 
     @Provides

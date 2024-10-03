@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import co.uniandes.abcall.data.models.UpdateState
+import co.uniandes.abcall.ui.components.FullLoading
 import co.uniandes.abcall.ui.components.IssueItem
 import co.uniandes.abcall.ui.navigation.BottomBar
 import co.uniandes.abcall.ui.navigation.Screen.Main.CreateIssue
@@ -94,17 +95,7 @@ fun IssuesScreen(navController: NavController, viewModel: IssuesViewModel = hilt
 
             when (updateState) {
                 is UpdateState.Loading -> {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(Color.Gray.copy(alpha = 0.5f))
-                            .clickable(enabled = false) {}
-                    ) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.align(Alignment.Center),
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                    }
+                    FullLoading()
                 }
                 is UpdateState.Success -> {
                     viewModel.resetState()
