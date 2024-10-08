@@ -1,0 +1,31 @@
+name: Build Mobile App
+
+# El workflow solo se ejecuta cuando se crea o actualiza un Pull Request
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Chequear el código desde el repositorio
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # 2. Configurar JDK (Java Development Kit)
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin' 
+          java-version: '17'      
+
+      # 3. Conceder permisos de ejecución al archivo gradlew
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      # 4. Ejecutar el build con Gradle
+      - name: Build with Gradle
+        run: ./gradlew build
