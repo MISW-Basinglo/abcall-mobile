@@ -1,21 +1,20 @@
 package co.uniandes.abcall.di
 
-import android.content.Context
 import co.uniandes.abcall.networking.AbcallApi
+import co.uniandes.abcall.networking.AuthApi
 import co.uniandes.abcall.networking.AuthInterceptor
+import co.uniandes.abcall.networking.LoggerInterceptor
 import co.uniandes.abcall.storage.LocalStorage
-import co.uniandes.abcall.storage.SharedPreferencesManager
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -30,26 +29,44 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(localStorage: LocalStorage): OkHttpClient {
+    @Named("Abcall")
+    fun provideAbcallOkHttpClient(localStorage: LocalStorage, @Named("AuthApi") authApi: AuthApi): OkHttpClient {
         return OkHttpClient.Builder()
-            .addInterceptor(AuthInterceptor(localStorage))
+            .addInterceptor(AuthInterceptor(localStorage, authApi))  // Usamos AuthApi para refrescar tokens
+            .addInterceptor(LoggerInterceptor())
             .build()
     }
 
     @Provides
     @Singleton
-    fun provideRetrofit(okHttpClient: OkHttpClient, gson: Gson): Retrofit {
+    @Named("Auth")
+    fun provideAuthOkHttpClient(): OkHttpClient {
+        return OkHttpClient.Builder()
+            .addInterceptor(LoggerInterceptor())
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideAbcallApi(gson: Gson, @Named("Abcall") okHttpClient: OkHttpClient): AbcallApi {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
+            .create(AbcallApi::class.java)
     }
 
     @Provides
     @Singleton
-    fun provideAuthApi(retrofit: Retrofit): AbcallApi {
-        return retrofit.create(AbcallApi::class.java)
+    @Named("AuthApi")
+    fun provideAuthApi(gson: Gson, @Named("Auth") okHttpClient: OkHttpClient): AuthApi {
+        return Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
+            .create(AuthApi::class.java)
     }
 
 }

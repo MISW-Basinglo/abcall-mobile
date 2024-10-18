@@ -1,19 +1,17 @@
 package co.uniandes.abcall.ui.screens.auth
 
 import android.annotation.SuppressLint
+import android.util.Patterns
 import android.widget.Toast
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -35,6 +33,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import co.uniandes.abcall.R
 import co.uniandes.abcall.data.models.UpdateState
+import co.uniandes.abcall.networking.ServerErrorMessage.GENERIC_ERROR
+import co.uniandes.abcall.networking.ServerErrorMessage.USER_INVALID_PASSWORD
+import co.uniandes.abcall.networking.ServerErrorMessage.USER_NOT_AUTHORIZED
+import co.uniandes.abcall.networking.ServerErrorMessage.USER_NOT_FOUND
+import co.uniandes.abcall.networking.ServerErrorMessage.USER_NOT_REGISTERED
 import co.uniandes.abcall.ui.components.FullLoading
 import co.uniandes.abcall.ui.navigation.goMain
 
@@ -44,7 +47,7 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = hiltVi
     val emailState = remember { mutableStateOf("") }
     val passwordState = remember { mutableStateOf("") }
     val isButtonEnabled by derivedStateOf {
-        emailState.value.isNotBlank() && passwordState.value.isNotBlank()
+        Patterns.EMAIL_ADDRESS.matcher(emailState.value).matches() && passwordState.value.isNotBlank()
     }
     val keyboardController = LocalSoftwareKeyboardController.current
 
@@ -159,11 +162,19 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = hiltVi
                 navController.goMain()
             }
             is UpdateState.Error -> {
-                viewModel.resetState()
-                val errorMessage = (updateState as UpdateState.Error).message
+                val exception = (updateState as UpdateState.Error).message
+                val errorMessage = when (exception) {
+                    USER_NOT_REGISTERED -> stringResource(id = R.string.user_not_registered)
+                    USER_INVALID_PASSWORD -> stringResource(id = R.string.invalid_password)
+                    USER_NOT_FOUND -> stringResource(id = R.string.user_not_found)
+                    USER_NOT_AUTHORIZED -> stringResource(id = R.string.user_not_authorized)
+                    GENERIC_ERROR -> stringResource(id = R.string.generic_error)
+                    else -> exception
+                }
                 Toast.makeText(navController.context, errorMessage, Toast.LENGTH_SHORT).show()
+                viewModel.resetState()
             }
-            else -> { }
+            is UpdateState.Idle -> { }
         }
     }
 

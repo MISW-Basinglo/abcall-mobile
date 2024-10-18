@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.uniandes.abcall.data.models.UpdateState
 import co.uniandes.abcall.data.repositories.auth.AuthRepository
+import co.uniandes.abcall.networking.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -23,11 +23,12 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 _updateState.value = UpdateState.Loading
-                delay(2000)
-                repository.login(email, password)
-                _updateState.value = UpdateState.Success
+                when (val result = repository.login(email, password)) {
+                    is Result.Success -> _updateState.value = UpdateState.Success
+                    is Result.Error -> _updateState.value = UpdateState.Error(result.message)
+                }
             } catch (e: Exception) {
-                _updateState.value = UpdateState.Error("Error de red: ${e.message}")
+                _updateState.value = UpdateState.Error(e.localizedMessage.orEmpty())
             }
         }
     }

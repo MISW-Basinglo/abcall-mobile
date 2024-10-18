@@ -68,14 +68,21 @@ dependencies {
     implementation(libs.converter.gson)
     implementation(libs.dagger.hilt)
     implementation(libs.androidx.runtime.livedata)
+    implementation(libs.jwt.decode)
+
     kapt(libs.dagger.hilt.compiler)
 
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.androidx.core.testing)
+    testImplementation(libs.hilt.android.testing)
     testImplementation(libs.junit)
+    testImplementation(libs.mockk)
 
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
+    androidTestImplementation(libs.hilt.android.testing)
 
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
