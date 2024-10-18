@@ -29,3 +29,7 @@ jobs:
       # 4. Ejecutar el build con Gradle
       - name: Build with Gradle
         run: ./gradlew build
+
+      # 5. Ejecutar las pruebas unitarias
+      - name: Run Unit Tests
+        run: ./gradlew test
