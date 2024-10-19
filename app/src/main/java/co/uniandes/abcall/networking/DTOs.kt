@@ -54,7 +54,7 @@ enum class IssueSource {
     @SerializedName("APP_WEB") APP_WEB,
     @SerializedName("CHATBOT") CHATBOT,
     @SerializedName("APP_MOBILE") APP_MOBILE,
-    @SerializedName("    @SerializedName(\"other\") OTHER;\n") OTHER;
+    @SerializedName("OTHER") OTHER;
 
     companion object {
         fun fromValue(value: String) = entries.find { it.name == value } ?: APP_MOBILE
