@@ -13,7 +13,7 @@ fun getIssueStatusColor(status: IssueStatus): Color {
     return when (status) {
         IssueStatus.CLOSED -> colorResource(id = R.color.green)
         IssueStatus.SCALED -> colorResource(id = R.color.orange)
-        IssueStatus.OPEN -> colorResource(id = R.color.red)
+        IssueStatus.OPEN -> colorResource(id = R.color.blue)
     }
 }
 
