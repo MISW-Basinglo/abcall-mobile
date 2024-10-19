@@ -1,9 +1,12 @@
 package co.uniandes.abcall.ui.screens.issues
 
 import android.widget.Toast
+import androidx.compose.foundation.background
 import co.uniandes.abcall.R
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Divider
@@ -15,12 +18,15 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
@@ -31,6 +37,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavController
 import co.uniandes.abcall.data.models.UpdateState
+import co.uniandes.abcall.ui.components.FadingLazyColumn
 import co.uniandes.abcall.ui.components.FullLoading
 import co.uniandes.abcall.ui.components.IssueItem
 import co.uniandes.abcall.ui.components.MinimalDialog
@@ -42,6 +49,7 @@ fun IssuesScreen(navController: NavController, viewModel: IssuesViewModel = hilt
     val items by viewModel.issues.observeAsState(emptyList())
     val openItemDetailsDialog = remember { mutableStateOf(false) }
     val itemSolution = remember { mutableStateOf("") }
+    val listState = rememberLazyListState()
 
     val updateState by viewModel.updateState.observeAsState(UpdateState.Idle)
 
@@ -55,7 +63,7 @@ fun IssuesScreen(navController: NavController, viewModel: IssuesViewModel = hilt
         onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
     }
 
-    if(openItemDetailsDialog.value){
+    if (openItemDetailsDialog.value) {
         MinimalDialog(
             onDismissRequest = { openItemDetailsDialog.value = false },
             text = itemSolution.value
@@ -94,16 +102,15 @@ fun IssuesScreen(navController: NavController, viewModel: IssuesViewModel = hilt
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    modifier = Modifier.padding(top = 55.dp, bottom = 83.dp ),
+                    modifier = Modifier.padding(top = 55.dp, bottom = 83.dp),
                     text = stringResource(id = R.string.issues).uppercase(),
                     color = MaterialTheme.colorScheme.secondary,
                     style = MaterialTheme.typography.titleLarge
                 )
 
-                LazyColumn(
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    items(items.size) { index ->
+                FadingLazyColumn(
+                    itemsCount = items.size,
+                    itemContent = { index ->
                         val item = items[index]
                         IssueItem(
                             item = item,
@@ -112,27 +119,26 @@ fun IssuesScreen(navController: NavController, viewModel: IssuesViewModel = hilt
                                 itemSolution.value = item.solution.orEmpty()
                             }
                         )
-                        if (index < items.size - 1) {
-                            Spacer(modifier = Modifier.height(8.dp))
-                            Divider(color = colorResource(id = R.color.grey_light))
-                        }
                     }
-                }
+                )
             }
 
             when (updateState) {
                 is UpdateState.Loading -> {
                     FullLoading()
                 }
+
                 is UpdateState.Success -> {
                     viewModel.resetState()
                 }
+
                 is UpdateState.Error -> {
                     val errorMessage = (updateState as UpdateState.Error).message
                     Toast.makeText(navController.context, errorMessage, Toast.LENGTH_SHORT).show()
                     viewModel.resetState()
                 }
-                else -> { }
+
+                else -> {}
             }
         }
     }
