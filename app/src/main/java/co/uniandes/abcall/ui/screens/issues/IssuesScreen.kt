@@ -102,8 +102,8 @@ fun IssuesScreen(navController: NavController, viewModel: IssuesViewModel = hilt
                 }
                 is UpdateState.Error -> {
                     viewModel.resetState()
-                    val errorMessage = (updateState as UpdateState.Error).message
-                    Toast.makeText(navController.context, errorMessage, Toast.LENGTH_SHORT).show()
+                    val errorMessage = (updateState as UpdateState.Error)
+                    Toast.makeText(navController.context, "errorMessage", Toast.LENGTH_SHORT).show()
                 }
                 else -> { }
             }

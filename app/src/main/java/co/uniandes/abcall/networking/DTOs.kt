@@ -34,5 +34,10 @@ data class SuggestResponse(
 )
 
 data class LoginResponse(
-    @SerializedName("token") val token: String
+    @SerializedName("access_token") val accessToken: String,
+    @SerializedName("refresh_token") val refreshToken: String
+)
+
+data class TokenResponse(
+    @SerializedName("access_token") val accessToken: String
 )

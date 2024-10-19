@@ -1,7 +1,9 @@
 package co.uniandes.abcall.storage
 
 interface LocalStorage {
-    fun getToken(): String?
-    fun saveToken(newToken: String)
-    fun clearToken()
+    fun getAccessToken(): String?
+    fun getRefreshToken(): String?
+    fun saveAccessToken(accessToken: String)
+    fun saveRefreshToken(refreshToken: String)
+    fun clearTokens()
 }

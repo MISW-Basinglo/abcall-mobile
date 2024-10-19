@@ -14,6 +14,11 @@
     <string name="no_account">Don\'t have an account yet?</string>
     <string name="sign_up">Sign Up</string>
     <string name="forgot_password">Forgot your password?</string>
+    <string name="user_not_registered">User not registered.</string>
+    <string name="invalid_password">Invalid password.</string>
+    <string name="user_not_found">User not found.</string>
+    <string name="user_not_authorized">User not authorized.</string>
+    <string name="generic_error">Something went wrong. Please try again later.</string>
 
     <string name="issues">Incidents</string>
     <string name="create_issue">Create Incident</string>

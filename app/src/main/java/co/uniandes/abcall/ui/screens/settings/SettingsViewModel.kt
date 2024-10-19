@@ -24,10 +24,10 @@ class SettingsViewModel  @Inject constructor(
             try {
                 _updateState.value = UpdateState.Loading
                 delay(2000)
-                repository.updateChannel(channel)
+                //repository.updateChannel(channel)
                 _updateState.value = UpdateState.Success
             } catch (e: Exception) {
-                _updateState.value = UpdateState.Error("Error de red: ${e.message}")
+                _updateState.value = UpdateState.Error(e.localizedMessage.orEmpty())
             }
         }
     }

@@ -37,7 +37,7 @@ class CreateIssueViewModel @Inject constructor(
                 repository.createIssue(type, description)
                 _updateState.value = UpdateState.Success
             } catch (e: Exception) {
-                _updateState.value = UpdateState.Error("Error de red: ${e.message}")
+                _updateState.value = UpdateState.Error(e.localizedMessage.orEmpty())
             }
         }
     }
@@ -50,7 +50,7 @@ class CreateIssueViewModel @Inject constructor(
                 _suggestState.value = repository.suggestIssue(description)
                 _iaState.value = IAState.Success
             } catch (e: Exception) {
-                _updateState.value = UpdateState.Error("Error de red: ${e.message}")
+                _updateState.value = UpdateState.Error(e.localizedMessage.orEmpty())
             }
         }
     }
