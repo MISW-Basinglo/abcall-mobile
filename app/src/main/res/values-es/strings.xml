@@ -4,7 +4,7 @@
     <string name="not_implemented">Funcionalidad no implementada</string>
     <string name="description">Descripción</string>
     <string name="create">Crear</string>
-    <string name="cancel">Cancel</string>
+    <string name="cancel">Cancelar</string>
     <string name="update">Actualizar</string>
     <string name="successful">Operación exitosa</string>
 
@@ -19,7 +19,13 @@
     <string name="user_not_found">Usuario no encontrado.</string>
     <string name="user_not_authorized">Usuario no autorizado.</string>
     <string name="generic_error">Algo salió mal. Por favor, inténtalo de nuevo más tarde.</string>
-
+    <string name="issue_request">Solicitud</string>
+    <string name="issue_complaint">Queja</string>
+    <string name="issue_claim">Reclamo</string>
+    <string name="issue_suggestion">Sugerencia</string>
+    <string name="issue_praise">Felicitaciones</string>
+    <string name="empty_issue_solution">No hay solución aun.</string>
+L
     <string name="issues">Incidentes</string>
     <string name="create_issue">Crear incidente</string>
     <string name="issue_closed">Cerrado</string>

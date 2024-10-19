@@ -44,8 +44,8 @@ import co.uniandes.abcall.ui.navigation.goMain
 @SuppressLint("UnrememberedMutableState")
 @Composable
 fun LoginScreen(navController: NavController, viewModel: LoginViewModel = hiltViewModel()) {
-    val emailState = remember { mutableStateOf("") }
-    val passwordState = remember { mutableStateOf("") }
+    val emailState = remember { mutableStateOf("user@example.com") }
+    val passwordState = remember { mutableStateOf("userpass") }
     val isButtonEnabled by derivedStateOf {
         Patterns.EMAIL_ADDRESS.matcher(emailState.value).matches() && passwordState.value.isNotBlank()
     }

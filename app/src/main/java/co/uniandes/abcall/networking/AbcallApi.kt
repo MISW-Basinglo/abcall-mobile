@@ -14,11 +14,11 @@ interface AbcallApi {
     @POST("chat/send-message")
     suspend fun sendMessage(@Body request: MessageRequest)
 
-    @GET("issues")
-    suspend fun getIssues(): Response<List<IssueResponse>>
+    @GET("issues_management")
+    suspend fun getIssues(): Response<IssuesListResponse>
 
-    @POST("issues")
-    suspend fun createIssue(@Body request: IssueRequest)
+    @POST("issues_management")
+    suspend fun createIssue(@Body request: IssueRequest): Response<IssueDataResponse>
 
     @POST("issues")
     suspend fun suggestIssue(@Body request: SuggestRequest): Response<SuggestResponse>

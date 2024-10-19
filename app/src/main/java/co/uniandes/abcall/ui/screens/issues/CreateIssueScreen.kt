@@ -39,17 +39,18 @@ import androidx.navigation.NavController
 import co.uniandes.abcall.R
 import co.uniandes.abcall.data.models.IAState
 import co.uniandes.abcall.data.models.UpdateState
+import co.uniandes.abcall.networking.IssueType
 import co.uniandes.abcall.ui.components.FullLoading
 import co.uniandes.abcall.ui.navigation.TopBar
 import co.uniandes.abcall.ui.navigation.goBack
+import co.uniandes.abcall.ui.utils.getIssueTypeText
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateIssueScreen(navController: NavController, viewModel: CreateIssueViewModel = hiltViewModel()) {
-    val typeState = remember { mutableStateOf("") }
+    val typeState = remember { mutableStateOf<IssueType?>(null) }
     val descriptionState = remember { mutableStateOf("") }
     val expanded = remember { mutableStateOf(false) }
-    val typeOptions = listOf("Salud", "Ciencia", "Tecnología")
 
     val updateState by viewModel.updateState.observeAsState(UpdateState.Idle)
     val iaState by viewModel.iaState.observeAsState(IAState.Idle)
@@ -89,7 +90,7 @@ fun CreateIssueScreen(navController: NavController, viewModel: CreateIssueViewMo
                     ) {
                         OutlinedTextField(
                             readOnly = true,
-                            value = typeState.value,
+                            value = getIssueTypeText(typeState.value),
                             onValueChange = { },
                             trailingIcon = {
                                 ExposedDropdownMenuDefaults.TrailingIcon(
@@ -107,9 +108,9 @@ fun CreateIssueScreen(navController: NavController, viewModel: CreateIssueViewMo
                             expanded = expanded.value,
                             onDismissRequest = { expanded.value = false }
                         ) {
-                            typeOptions.forEach { option ->
+                            IssueType.entries.forEach { option ->
                                 DropdownMenuItem(
-                                    text = { Text(text = option) },
+                                    text = { Text(text = getIssueTypeText(option)) },
                                     onClick = {
                                         typeState.value = option
                                         expanded.value = false
@@ -162,13 +163,12 @@ fun CreateIssueScreen(navController: NavController, viewModel: CreateIssueViewMo
                         }
                         else -> {
                             Button(
-                                enabled = typeState.value.isNotEmpty() && descriptionState.value.isNotEmpty(),
+                                enabled = typeState.value != null && descriptionState.value.isNotEmpty(),
                                 onClick = {
                                     keyboardController?.hide()
                                     viewModel.suggestIssue(descriptionState.value)
                                 }
                             ) {
-
                                 Text(
                                     text = stringResource(id = R.string.suggest).uppercase(),
                                     style = MaterialTheme.typography.headlineSmall
@@ -212,8 +212,13 @@ fun CreateIssueScreen(navController: NavController, viewModel: CreateIssueViewMo
                         )
                     }
                     Button(
-                        enabled = typeState.value.isNotEmpty() && descriptionState.value.isNotEmpty(),
-                        onClick = { viewModel.createIssue(typeState.value, descriptionState.value) }
+                        enabled = typeState.value != null && descriptionState.value.isNotEmpty(),
+                        onClick = {
+                            viewModel.createIssue(
+                                type = typeState.value?.name.orEmpty(),
+                                description = descriptionState.value
+                            )
+                        }
                     ) {
                         Text(
                             text = stringResource(id = R.string.create).uppercase(),
@@ -234,9 +239,9 @@ fun CreateIssueScreen(navController: NavController, viewModel: CreateIssueViewMo
                     navController.goBack()
                 }
                 is UpdateState.Error -> {
+                    val errorMessage = (updateState as UpdateState.Error).message
+                    Toast.makeText(navController.context, errorMessage, Toast.LENGTH_SHORT).show()
                     viewModel.resetState()
-                    val errorMessage = (updateState as UpdateState.Error)
-                    Toast.makeText(navController.context, "errorMessage", Toast.LENGTH_SHORT).show()
                 }
                 else -> {}
             }
