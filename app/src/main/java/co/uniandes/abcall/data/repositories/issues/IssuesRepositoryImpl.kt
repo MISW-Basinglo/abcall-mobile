@@ -5,8 +5,6 @@ import co.uniandes.abcall.networking.ErrorResponse
 import co.uniandes.abcall.networking.IssueRequest
 import co.uniandes.abcall.networking.IssueResponse
 import co.uniandes.abcall.networking.IssueSource
-import co.uniandes.abcall.networking.IssueStatus
-import co.uniandes.abcall.networking.IssueType
 import co.uniandes.abcall.networking.Result
 import co.uniandes.abcall.networking.ServerErrorMessage
 import com.google.gson.Gson
