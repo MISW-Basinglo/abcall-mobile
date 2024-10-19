@@ -5,9 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.uniandes.abcall.data.models.IAState
-import co.uniandes.abcall.data.models.Issue
 import co.uniandes.abcall.data.models.UpdateState
 import co.uniandes.abcall.data.repositories.issues.IssuesRepository
+import co.uniandes.abcall.networking.IssueType
+import co.uniandes.abcall.networking.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -33,9 +34,12 @@ class CreateIssueViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 _updateState.value = UpdateState.Loading
-                delay(2000)
-                repository.createIssue(type, description)
-                _updateState.value = UpdateState.Success
+                when (val result = repository.createIssue(type, description)) {
+                    is Result.Success -> {
+                        _updateState.value = UpdateState.Success
+                    }
+                    is Result.Error -> _updateState.value = UpdateState.Error(result.message)
+                }
             } catch (e: Exception) {
                 _updateState.value = UpdateState.Error(e.localizedMessage.orEmpty())
             }

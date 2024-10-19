@@ -1,4 +1,4 @@
-package co.uniandes.abcall.ui.screens
+package co.uniandes.abcall.ui.screens.auth
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
@@ -6,7 +6,6 @@ import co.uniandes.abcall.data.models.UpdateState
 import co.uniandes.abcall.data.repositories.auth.AuthRepository
 import co.uniandes.abcall.networking.LoginResponse
 import co.uniandes.abcall.networking.Result
-import co.uniandes.abcall.ui.screens.auth.LoginViewModel
 import io.mockk.coEvery
 import io.mockk.mockk
 import io.mockk.verify

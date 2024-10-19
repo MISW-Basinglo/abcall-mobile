@@ -21,7 +21,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    private const val BASE_URL = "https://your-api-url.com/"
+    private const val BASE_URL = "http://192.168.1.4"
 
     @Provides
     @Singleton
@@ -32,7 +32,7 @@ object NetworkModule {
     @Named("Abcall")
     fun provideAbcallOkHttpClient(localStorage: LocalStorage, @Named("AuthApi") authApi: AuthApi): OkHttpClient {
         return OkHttpClient.Builder()
-            .addInterceptor(AuthInterceptor(localStorage, authApi))  // Usamos AuthApi para refrescar tokens
+            .addInterceptor(AuthInterceptor(localStorage, authApi))
             .addInterceptor(LoggerInterceptor())
             .build()
     }

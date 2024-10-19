@@ -35,6 +35,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import co.uniandes.abcall.R
 import co.uniandes.abcall.data.models.Message
+import co.uniandes.abcall.ui.components.MessageBubble
 import co.uniandes.abcall.ui.navigation.BottomBar
 
 @Composable
@@ -123,28 +124,3 @@ fun ChatInput(
         maxLines = 5
     )
 }
-
-@Composable
-fun MessageBubble(message: Message) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(4.dp),
-        horizontalArrangement = if (message.isUser) Arrangement.End else Arrangement.Start
-    ) {
-        Column(
-            modifier = Modifier.padding(8.dp)
-        ) {
-            Text(
-                text = stringResource(id = if(message.isUser) R.string.chat_user else R.string.chat_channel),
-                style = MaterialTheme.typography.headlineSmall
-            )
-            Text(
-                text = message.text,
-                color = Color.Gray,
-                style = MaterialTheme.typography.bodyMedium
-            )
-        }
-    }
-}
-

@@ -1,6 +1,7 @@
 package co.uniandes.abcall.networking
 
 import com.google.gson.annotations.SerializedName
+import java.util.Date
 
 data class LoginRequest(
     @SerializedName("email") val email: String,
@@ -20,14 +21,67 @@ data class SuggestRequest(
 )
 
 data class IssueRequest(
-    @SerializedName("issue_type") val type: String,
-    @SerializedName("issue_description") val description: String
+    @SerializedName("type") val type: String,
+    @SerializedName("description") val description: String,
+    @SerializedName("source") val source: String
+)
+
+data class IssuesListResponse(
+    @SerializedName("count") val count: Int,
+    @SerializedName("data") val data: List<IssueResponse>
+)
+
+data class IssueDataResponse(
+    @SerializedName("data") val data: IssueResponse
 )
 
 data class IssueResponse(
-    @SerializedName("issue_type") val type: String,
-    @SerializedName("issue_description") val description: String
+    @SerializedName("id") val id: Int,
+    @SerializedName("type") val type: IssueType,
+    @SerializedName("description") val description: String,
+    @SerializedName("solution") val solution: String?,
+    @SerializedName("status") val status: IssueStatus,
+    @SerializedName("source") val source: IssueSource,
+    @SerializedName("user_id") val userId: Int,
+    @SerializedName("company_id") val companyId: Int,
+    @SerializedName("created_at") val createdAt: Date,
+    @SerializedName("updated_at") val updatedAt: Date?
 )
+
+enum class IssueSource {
+    @SerializedName("CALL") CALL,
+    @SerializedName("EMAIL") EMAIL,
+    @SerializedName("APP_WEB") APP_WEB,
+    @SerializedName("CHATBOT") CHATBOT,
+    @SerializedName("APP_MOBILE") APP_MOBILE,
+    @SerializedName("    @SerializedName(\"other\") OTHER;\n") OTHER;
+
+    companion object {
+        fun fromValue(value: String) = entries.find { it.name == value } ?: APP_MOBILE
+    }
+}
+
+enum class IssueType {
+    @SerializedName("REQUEST") REQUEST,
+    @SerializedName("COMPLAINT") COMPLAINT,
+    @SerializedName("CLAIM") CLAIM,
+    @SerializedName("SUGGESTION") SUGGESTION,
+    @SerializedName("PRAISE") PRAISE;
+
+    companion object {
+        fun fromValue(value: String): IssueType = entries.find { it.name == value } ?: REQUEST
+    }
+}
+
+enum class IssueStatus {
+    @SerializedName("OPEN") OPEN,
+    @SerializedName("SCALED") SCALED,
+    @SerializedName("CLOSED") CLOSED;
+
+    companion object {
+        fun fromValue(value: String) = entries.find { it.name == value } ?: OPEN
+    }
+}
 
 data class SuggestResponse(
     @SerializedName("description") val description: String

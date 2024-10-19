@@ -31,6 +31,12 @@
     <string name="recommendations">Recommendations:</string>
     <string name="suggest">Suggest solution with AI</string>
     <string name="suggest_content_description">This button allows you to suggest a solution with AI</string>
+    <string name="issue_request">Request</string>
+    <string name="issue_complaint">Complaint</string>
+    <string name="issue_claim">Claim</string>
+    <string name="issue_suggestion">Suggestion</string>
+    <string name="issue_praise">Praise</string>
+    <string name="empty_issue_solution">No solution yet.</string>
 
     <string name="chat">Chatbot</string>
     <string name="chat_input">Type a message...</string>
