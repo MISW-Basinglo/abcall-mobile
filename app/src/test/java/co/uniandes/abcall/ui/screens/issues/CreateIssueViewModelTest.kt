@@ -139,6 +139,39 @@ class CreateIssueViewModelTest {
     }
 
     @Test
+    fun `createIssue throws exception updates state to Error`() = runTest {
+        // Given
+        val type = "Bug"
+        val description = "Issue description"
+        val errorMessage = "Unexpected error"
+        coEvery { repository.createIssue(type, description) } throws Exception(errorMessage)
+
+        // When
+        viewModel.createIssue(type, description)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        // Then
+        verify { updateStateObserver.onChanged(UpdateState.Loading) }
+        verify { updateStateObserver.onChanged(UpdateState.Error(errorMessage)) }
+    }
+
+    @Test
+    fun `suggestIssue throws exception updates state to Error`() = runTest {
+        // Given
+        val description = "Suggested issue description"
+        val errorMessage = "Error suggesting issue"
+        coEvery { repository.suggestIssue(description) } throws Exception(errorMessage)
+
+        // When
+        viewModel.suggestIssue(description)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        // Then
+        verify { iaStateObserver.onChanged(IAState.Loading) }
+        verify { updateStateObserver.onChanged(UpdateState.Error(errorMessage)) }
+    }
+
+    @Test
     fun `resetState updates state to Idle`() {
         // When
         viewModel.resetState()
