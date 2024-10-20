@@ -9,7 +9,7 @@ interface AuthApi {
     @POST("auth/login")
     suspend fun auth(@Body request: LoginRequest): Response<LoginResponse>
 
-    @POST("/auth/refresh")
+    @POST("auth/refresh-token")
     fun refreshAccessToken(@Body refreshToken: String): Response<TokenResponse>
 
 }
