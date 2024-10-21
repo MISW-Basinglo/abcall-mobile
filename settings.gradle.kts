@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "ABCcall"
+rootProject.name = "ABCall"
 include(":app")
  

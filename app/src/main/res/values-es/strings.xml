@@ -1,0 +1,55 @@
+<resources>
+
+    <string name="app_name">ABCall</string>
+    <string name="not_implemented">Funcionalidad no implementada</string>
+    <string name="description">Descripción</string>
+    <string name="create">Crear</string>
+    <string name="cancel">Cancelar</string>
+    <string name="update">Actualizar</string>
+    <string name="successful">Operación exitosa</string>
+
+    <string name="email">Correo</string>
+    <string name="password">Contraseña</string>
+    <string name="access">Ingresar</string>
+    <string name="no_account">¿Aún no tienes una cuenta?</string>
+    <string name="sign_up">Registrate</string>
+    <string name="forgot_password">¿Olvidó su contraseña?</string>
+    <string name="user_not_registered">Usuario no registrado.</string>
+    <string name="invalid_password">Contraseña inválida.</string>
+    <string name="user_not_found">Usuario no encontrado.</string>
+    <string name="user_not_authorized">Usuario no autorizado.</string>
+    <string name="generic_error">Algo salió mal. Por favor, inténtalo de nuevo más tarde.</string>
+    <string name="issue_request">Solicitud</string>
+    <string name="issue_complaint">Queja</string>
+    <string name="issue_claim">Reclamo</string>
+    <string name="issue_suggestion">Sugerencia</string>
+    <string name="issue_praise">Felicitaciones</string>
+    <string name="empty_issue_solution">No hay solución aun.</string>
+L
+    <string name="issues">Incidentes</string>
+    <string name="create_issue">Crear incidente</string>
+    <string name="issue_closed">Cerrado</string>
+    <string name="issue_scaled">Escalado</string>
+    <string name="issue_opened">Abierto</string>
+    <string name="issue_back_content_description">Este botón permite volver al listado de incidente</string>
+    <string name="issue_create_content_description">Este botón permite crear un nuevo incidente</string>
+    <string name="type_issue">Tipo de incidente</string>
+    <string name="recommendations">Recomendaciones:</string>
+    <string name="suggest">Sugerir solución con IA</string>
+    <string name="suggest_content_description">Este botón permite sugerir una solución con IA"></string>
+
+
+    <string name="chat">Chatbot</string>
+    <string name="chat_input">Escribe un mensaje...</string>
+    <string name="chat_send_content_description">Este botón permite enviar el contenido del chat</string>
+    <string name="chat_user">Usuario</string>
+    <string name="chat_channel">Canal de atención</string>
+
+    <string name="settings">Configuraciones</string>
+    <string name="profile">Perfil</string>
+    <string name="name">Nombre</string>
+    <string name="phone">Teléfono</string>
+    <string name="channel">Canal de comunicación</string>
+    <string name="sign_out">Cerrar sesión</string>
+
+</resources>

@@ -1,16 +1,54 @@
 <resources>
 
-    <string name="app_name">ABCcall</string>
+    <string name="app_name">ABCall</string>
+    <string name="not_implemented">Functionality not implemented</string>
+    <string name="description">Description</string>
+    <string name="create">Create</string>
+    <string name="cancel">Cancel</string>
+    <string name="update">Update</string>
+    <string name="successful">Operation successful</string>
 
-    <string name="email">Correo</string>
-    <string name="password">Contraseña</string>
-    <string name="access">Ingresar</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="access">Log In</string>
+    <string name="no_account">Don\'t have an account yet?</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="forgot_password">Forgot your password?</string>
+    <string name="user_not_registered">User not registered.</string>
+    <string name="invalid_password">Invalid password.</string>
+    <string name="user_not_found">User not found.</string>
+    <string name="user_not_authorized">User not authorized.</string>
+    <string name="generic_error">Something went wrong. Please try again later.</string>
 
-    <string name="issues">Incidentes</string>
-    <string name="create_issue">Crear incidente</string>
+    <string name="issues">Incidents</string>
+    <string name="create_issue">Create Incident</string>
+    <string name="issue_closed">Closed</string>
+    <string name="issue_scaled">Scaled</string>
+    <string name="issue_opened">Opened</string>
+    <string name="issue_back_content_description">This button allows you to return to the incident list</string>
+    <string name="issue_create_content_description">This button allows you to create a new incident</string>
+    <string name="type_issue">Type of Incident</string>
+    <string name="recommendations">Recommendations:</string>
+    <string name="suggest">Suggest solution with AI</string>
+    <string name="suggest_content_description">This button allows you to suggest a solution with AI</string>
+    <string name="issue_request">Request</string>
+    <string name="issue_complaint">Complaint</string>
+    <string name="issue_claim">Claim</string>
+    <string name="issue_suggestion">Suggestion</string>
+    <string name="issue_praise">Praise</string>
+    <string name="empty_issue_solution">No solution yet.</string>
 
     <string name="chat">Chatbot</string>
+    <string name="chat_input">Type a message...</string>
+    <string name="chat_send_content_description">This button allows you to send the chat content</string>
+    <string name="chat_user">User</string>
+    <string name="chat_channel">Support Channel</string>
 
-    <string name="settings">Configuraciones</string>
+    <string name="settings">Settings</string>
+    <string name="profile">Profile</string>
+    <string name="name">Name</string>
+    <string name="phone">Phone</string>
+    <string name="channel">Communication Channel</string>
+    <string name="sign_out">Log Out</string>
 
 </resources>
