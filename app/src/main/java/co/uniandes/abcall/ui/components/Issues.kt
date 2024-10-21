@@ -16,6 +16,7 @@ import co.uniandes.abcall.R
 import co.uniandes.abcall.networking.IssueResponse
 import co.uniandes.abcall.ui.utils.getIssueStatusColor
 import co.uniandes.abcall.ui.utils.getIssueStatusText
+import co.uniandes.abcall.ui.utils.getIssueTypeText
 
 @Composable
 fun IssueItem(item: IssueResponse, onClick: () -> Unit = {}) {
@@ -28,7 +29,7 @@ fun IssueItem(item: IssueResponse, onClick: () -> Unit = {}) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = item.type.name,
+                text = getIssueTypeText(item.type),
                 style = MaterialTheme.typography.headlineLarge
             )
             Text(
