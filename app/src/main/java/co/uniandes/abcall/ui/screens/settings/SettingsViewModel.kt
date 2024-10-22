@@ -6,6 +6,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.uniandes.abcall.data.models.UpdateState
 import co.uniandes.abcall.data.repositories.auth.AuthRepository
+import co.uniandes.abcall.data.repositories.user.UserRepository
+import co.uniandes.abcall.networking.Result
+import co.uniandes.abcall.networking.UserResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -13,11 +16,30 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel  @Inject constructor(
-    private val repository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val userRepository: UserRepository
 ) : ViewModel() {
 
     private val _updateState = MutableLiveData<UpdateState>(UpdateState.Idle)
     val updateState: LiveData<UpdateState> get() = _updateState
+
+    private val _user = MutableLiveData<UserResponse>()
+    val user: LiveData<UserResponse> get() = _user
+
+    fun getUser() {
+        viewModelScope.launch {
+            try {
+                when (val result = userRepository.getUser()) {
+                    is Result.Success -> {
+                        _user.value = result.data
+                    }
+                    is Result.Error -> _updateState.value = UpdateState.Error(result.message)
+                }
+            } catch (e: Exception) {
+                _updateState.value = UpdateState.Error(e.localizedMessage.orEmpty())
+            }
+        }
+    }
 
     fun updateChannel(channel: String) {
         viewModelScope.launch {
@@ -34,7 +56,7 @@ class SettingsViewModel  @Inject constructor(
 
     fun logout() {
         viewModelScope.launch {
-            repository.logout()
+            authRepository.logout()
         }
     }
 

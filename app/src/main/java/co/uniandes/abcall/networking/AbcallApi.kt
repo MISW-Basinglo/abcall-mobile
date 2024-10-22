@@ -23,4 +23,7 @@ interface AbcallApi {
     @POST("issues")
     suspend fun suggestIssue(@Body request: SuggestRequest): Response<SuggestResponse>
 
+    @GET("user?scope=me")
+    suspend fun getUser(): Response<UserDataResponse>
+
 }

@@ -95,3 +95,30 @@ data class LoginResponse(
 data class TokenResponse(
     @SerializedName("access_token") val accessToken: String
 )
+
+data class UserDataResponse(
+    @SerializedName("data") val data: UserResponse
+)
+
+data class UserResponse(
+    @SerializedName("id") val id: Int,
+    @SerializedName("auth_id") val authId: Int,
+    @SerializedName("name") val name: String,
+    @SerializedName("phone") val phone: String,
+    @SerializedName("channel") val channel: UserChannel,
+    @SerializedName("company_id") val companyId: Int,
+    @SerializedName("dni") val dni: String,
+    @SerializedName("email") val email: String,
+    @SerializedName("importance") val importance: Int,
+    @SerializedName("created_at") val createdAt: Date,
+    @SerializedName("updated_at") val updatedAt: Date?
+)
+
+enum class UserChannel {
+    @SerializedName("EMAIL") EMAIL,
+    @SerializedName("PHONE") PHONE;
+
+    companion object {
+        fun fromValue(value: String) = entries.find { it.name == value } ?: PHONE
+    }
+}
