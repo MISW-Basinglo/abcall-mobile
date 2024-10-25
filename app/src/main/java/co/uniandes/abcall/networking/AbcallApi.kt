@@ -8,9 +8,6 @@ import retrofit2.http.PUT
 
 interface AbcallApi {
 
-    @PUT("user/update-channel")
-    suspend fun updateChannel(@Body request: ChannelUpdateRequest)
-
     @POST("chat/send-message")
     suspend fun sendMessage(@Body request: MessageRequest)
 
@@ -25,5 +22,8 @@ interface AbcallApi {
 
     @GET("user?scope=me")
     suspend fun getUser(): Response<UserDataResponse>
+
+    @PUT("user")
+    suspend fun setUser(@Body user: UserRequest): Response<UserDataResponse>
 
 }

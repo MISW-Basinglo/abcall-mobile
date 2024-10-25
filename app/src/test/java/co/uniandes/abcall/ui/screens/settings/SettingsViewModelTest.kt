@@ -111,14 +111,58 @@ class SettingsViewModelTest {
     }
 
     @Test
-    fun `updateChannel updates state to Loading and then Success`() = runTest {
+    fun `setUser success updates user LiveData and sets UpdateState to Success`() = runTest {
+        // Given
+        val userResponse = UserResponse(
+            id = 1,
+            authId = 123,
+            name = "John Doe",
+            phone = "1234567890",
+            channel = UserChannel.EMAIL,
+            companyId = 1001,
+            dni = "ABC123",
+            email = "john.doe@example.com",
+            importance = 5,
+            createdAt = Date(),
+            updatedAt = null
+        )
+        coEvery { userRepository.setUser(any()) } returns Result.Success(userResponse)
+
         // When
-        viewModel.updateChannel("newChannel")
+        viewModel.setUser("EMAIL")
         testDispatcher.scheduler.advanceUntilIdle()
 
         // Then
-        verify { updateStateObserver.onChanged(UpdateState.Loading) }
+        verify { userObserver.onChanged(userResponse) }
         verify { updateStateObserver.onChanged(UpdateState.Success) }
+    }
+
+    @Test
+    fun `setUser error updates state to Error`() = runTest {
+        // Given
+        val errorMessage = "Error setting user"
+        coEvery { userRepository.setUser(any()) } returns Result.Error(errorMessage)
+
+        // When
+        viewModel.setUser("EMAIL")
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        // Then
+        verify { updateStateObserver.onChanged(UpdateState.Error(errorMessage)) }
+    }
+
+    @Test
+    fun `setUser exception updates state to Error`() = runTest {
+        // Given
+        val exceptionMessage = "Unexpected error"
+        coEvery { userRepository.setUser(any()) } throws Exception(exceptionMessage)
+
+        // When
+        viewModel.setUser("EMAIL")
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        // Then
+        verify { updateStateObserver.onChanged(UpdateState.Error(exceptionMessage)) }
     }
 
     @Test

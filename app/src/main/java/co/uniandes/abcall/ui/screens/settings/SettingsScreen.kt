@@ -216,7 +216,7 @@ fun SettingsScreen(navController: NavController, viewModel: SettingsViewModel = 
                     Button(
                         enabled = user?.channel != channelState.value,
                         onClick = {
-                            viewModel.updateChannel(channelState.value?.name.orEmpty())
+                            viewModel.setUser(channel = channelState.value?.name.orEmpty())
                         }
                     ) {
                         Text(

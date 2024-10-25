@@ -96,6 +96,10 @@ data class TokenResponse(
     @SerializedName("access_token") val accessToken: String
 )
 
+data class UserRequest(
+    @SerializedName("channel") val channel: String
+)
+
 data class UserDataResponse(
     @SerializedName("data") val data: UserResponse
 )

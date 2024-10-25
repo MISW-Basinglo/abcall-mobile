@@ -8,9 +8,9 @@ import co.uniandes.abcall.data.models.UpdateState
 import co.uniandes.abcall.data.repositories.auth.AuthRepository
 import co.uniandes.abcall.data.repositories.user.UserRepository
 import co.uniandes.abcall.networking.Result
+import co.uniandes.abcall.networking.UserRequest
 import co.uniandes.abcall.networking.UserResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -41,13 +41,18 @@ class SettingsViewModel  @Inject constructor(
         }
     }
 
-    fun updateChannel(channel: String) {
+    fun setUser(channel: String) {
         viewModelScope.launch {
             try {
-                _updateState.value = UpdateState.Loading
-                delay(2000)
-                //repository.updateChannel(channel)
-                _updateState.value = UpdateState.Success
+                val user = UserRequest(channel)
+                when (val result = userRepository.setUser(user)
+                ) {
+                    is Result.Success -> {
+                        _user.value = result.data
+                        _updateState.value = UpdateState.Success
+                    }
+                    is Result.Error -> _updateState.value = UpdateState.Error(result.message)
+                }
             } catch (e: Exception) {
                 _updateState.value = UpdateState.Error(e.localizedMessage.orEmpty())
             }

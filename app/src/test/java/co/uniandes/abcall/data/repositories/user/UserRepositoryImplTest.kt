@@ -88,4 +88,74 @@ class UserRepositoryImplTest {
         assert(result is Result.Error)
         assertEquals(errorMessage, (result as Result.Error).message)
     }
+
+    @Test
+    fun `setUser returns successful result`() = runBlocking {
+        // Given
+        val userRequest = UserRequest(channel = "EMAIL")
+        val userResponse = UserResponse(
+            id = 1,
+            authId = 123,
+            name = "John Doe",
+            phone = "1234567890",
+            channel = UserChannel.EMAIL,
+            companyId = 1001,
+            dni = "ABC123",
+            email = "john.doe@example.com",
+            importance = 5,
+            createdAt = Date(),
+            updatedAt = null
+        )
+        val response = Response.success(UserDataResponse(userResponse))
+
+        // Mock behavior
+        coEvery { api.setUser(userRequest) } returns response
+
+        // When
+        val result = userRepository.setUser(userRequest)
+
+        // Then
+        assert(result is Result.Success)
+        assertEquals(userResponse, (result as Result.Success).data)
+    }
+
+    @Test
+    fun `setUser returns error result when response body is null`() = runBlocking {
+        // Given
+        val userRequest = UserRequest(channel = "EMAIL")
+        val response = Response.success<UserDataResponse>(null)
+
+        // Mock behavior
+        coEvery { api.setUser(userRequest) } returns response
+
+        // When
+        val result = userRepository.setUser(userRequest)
+
+        // Then
+        assert(result is Result.Error)
+        assertEquals(ServerErrorMessage.GENERIC_ERROR, (result as Result.Error).message)
+    }
+
+    @Test
+    fun `setUser returns error result when response is unsuccessful`() = runBlocking {
+        // Given
+        val userRequest = UserRequest(channel = "EMAIL")
+        val errorMessage = "Error setting user"
+        val errorResponse = ErrorResponse(errorMessage, "Error")
+        val errorBodyJson = Gson().toJson(errorResponse)
+        val responseBody = ResponseBody.create(MediaType.get("application/json"), errorBodyJson)
+
+        val response = Response.error<UserDataResponse>(400, responseBody)
+
+        // Mock behavior
+        coEvery { api.setUser(userRequest) } returns response
+
+        // When
+        val result = userRepository.setUser(userRequest)
+
+        // Then
+        assert(result is Result.Error)
+        assertEquals(errorMessage, (result as Result.Error).message)
+    }
+
 }
