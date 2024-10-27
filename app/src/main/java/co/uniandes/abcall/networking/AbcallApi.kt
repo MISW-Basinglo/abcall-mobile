@@ -3,8 +3,9 @@ package co.uniandes.abcall.networking
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.PATCH
 import retrofit2.http.POST
-import retrofit2.http.PUT
+import retrofit2.http.Path
 
 interface AbcallApi {
 
@@ -23,7 +24,7 @@ interface AbcallApi {
     @GET("user?scope=me")
     suspend fun getUser(): Response<UserDataResponse>
 
-    @PUT("user")
-    suspend fun setUser(@Body user: UserRequest): Response<UserDataResponse>
+    @PATCH("user/{id}")
+    suspend fun setUser(@Path("id") id: Int, @Body user: UserRequest): Response<UserDataResponse>
 
 }

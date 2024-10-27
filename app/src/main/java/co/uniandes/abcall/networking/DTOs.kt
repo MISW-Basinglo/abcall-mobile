@@ -97,7 +97,10 @@ data class TokenResponse(
 )
 
 data class UserRequest(
-    @SerializedName("channel") val channel: String
+    @SerializedName("name") val name: String,
+    @SerializedName("phone") val phone: String,
+    @SerializedName("channel") val channel: String,
+    @SerializedName("email") val email: String
 )
 
 data class UserDataResponse(
@@ -120,9 +123,10 @@ data class UserResponse(
 
 enum class UserChannel {
     @SerializedName("EMAIL") EMAIL,
-    @SerializedName("PHONE") PHONE;
+    @SerializedName("SMS") SMS;
 
     companion object {
-        fun fromValue(value: String) = entries.find { it.name == value } ?: PHONE
+        fun fromValue(value: String) = entries.find { it.name == value } ?: EMAIL
     }
+
 }

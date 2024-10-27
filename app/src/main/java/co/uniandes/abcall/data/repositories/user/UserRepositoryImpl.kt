@@ -25,8 +25,8 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun setUser(user: UserRequest): Result<UserResponse> {
-        val response = api.setUser(user)
+    override suspend fun setUser(userId: Int, user: UserRequest): Result<UserResponse> {
+        val response = api.setUser(userId, user)
         return if (response.isSuccessful) {
             response.body()?.let { userResponse ->
                 return Result.Success(userResponse.data)

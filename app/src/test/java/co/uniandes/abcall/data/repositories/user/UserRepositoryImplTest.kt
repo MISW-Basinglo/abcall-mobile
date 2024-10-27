@@ -92,7 +92,12 @@ class UserRepositoryImplTest {
     @Test
     fun `setUser returns successful result`() = runBlocking {
         // Given
-        val userRequest = UserRequest(channel = "EMAIL")
+        val userRequest = UserRequest(
+            name = "John Doe",
+            phone = "1234567890",
+            channel = "EMAIL",
+            email = "john.doe@example.com"
+        )
         val userResponse = UserResponse(
             id = 1,
             authId = 123,
@@ -109,10 +114,10 @@ class UserRepositoryImplTest {
         val response = Response.success(UserDataResponse(userResponse))
 
         // Mock behavior
-        coEvery { api.setUser(userRequest) } returns response
+        coEvery { api.setUser(1, userRequest) } returns response
 
         // When
-        val result = userRepository.setUser(userRequest)
+        val result = userRepository.setUser(1, userRequest)
 
         // Then
         assert(result is Result.Success)
@@ -122,14 +127,19 @@ class UserRepositoryImplTest {
     @Test
     fun `setUser returns error result when response body is null`() = runBlocking {
         // Given
-        val userRequest = UserRequest(channel = "EMAIL")
+        val userRequest = UserRequest(
+            name = "John Doe",
+            phone = "1234567890",
+            channel = "EMAIL",
+            email = "john.doe@example.com"
+        )
         val response = Response.success<UserDataResponse>(null)
 
         // Mock behavior
-        coEvery { api.setUser(userRequest) } returns response
+        coEvery { api.setUser(1, userRequest) } returns response
 
         // When
-        val result = userRepository.setUser(userRequest)
+        val result = userRepository.setUser(1, userRequest)
 
         // Then
         assert(result is Result.Error)
@@ -139,7 +149,12 @@ class UserRepositoryImplTest {
     @Test
     fun `setUser returns error result when response is unsuccessful`() = runBlocking {
         // Given
-        val userRequest = UserRequest(channel = "EMAIL")
+        val userRequest = UserRequest(
+            name = "John Doe",
+            phone = "1234567890",
+            channel = "EMAIL",
+            email = "john.doe@example.com"
+        )
         val errorMessage = "Error setting user"
         val errorResponse = ErrorResponse(errorMessage, "Error")
         val errorBodyJson = Gson().toJson(errorResponse)
@@ -148,10 +163,10 @@ class UserRepositoryImplTest {
         val response = Response.error<UserDataResponse>(400, responseBody)
 
         // Mock behavior
-        coEvery { api.setUser(userRequest) } returns response
+        coEvery { api.setUser(1, userRequest) } returns response
 
         // When
-        val result = userRepository.setUser(userRequest)
+        val result = userRepository.setUser(1, userRequest)
 
         // Then
         assert(result is Result.Error)

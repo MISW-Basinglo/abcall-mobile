@@ -8,6 +8,6 @@ interface UserRepository {
 
     suspend fun getUser(): Result<UserResponse>
 
-    suspend fun setUser(user: UserRequest): Result<UserResponse>
+    suspend fun setUser(userId: Int, user: UserRequest): Result<UserResponse>
 
 }

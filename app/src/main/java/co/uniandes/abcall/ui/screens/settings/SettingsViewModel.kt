@@ -44,14 +44,16 @@ class SettingsViewModel  @Inject constructor(
     fun setUser(channel: String) {
         viewModelScope.launch {
             try {
-                val user = UserRequest(channel)
-                when (val result = userRepository.setUser(user)
-                ) {
-                    is Result.Success -> {
-                        _user.value = result.data
-                        _updateState.value = UpdateState.Success
+                _user.value?.let {
+                    val user = UserRequest(it.name, it.phone, channel, it.email)
+                    when (val result = userRepository.setUser(it.id, user)
+                    ) {
+                        is Result.Success -> {
+                            _user.value = result.data
+                            _updateState.value = UpdateState.Success
+                        }
+                        is Result.Error -> _updateState.value = UpdateState.Error(result.message)
                     }
-                    is Result.Error -> _updateState.value = UpdateState.Error(result.message)
                 }
             } catch (e: Exception) {
                 _updateState.value = UpdateState.Error(e.localizedMessage.orEmpty())

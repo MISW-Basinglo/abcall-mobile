@@ -7,6 +7,7 @@ import co.uniandes.abcall.data.repositories.auth.AuthRepository
 import co.uniandes.abcall.data.repositories.user.UserRepository
 import co.uniandes.abcall.networking.Result
 import co.uniandes.abcall.networking.UserChannel
+import co.uniandes.abcall.networking.UserRequest
 import co.uniandes.abcall.networking.UserResponse
 import io.mockk.*
 import kotlinx.coroutines.Dispatchers
@@ -111,7 +112,7 @@ class SettingsViewModelTest {
     }
 
     @Test
-    fun `setUser success updates user LiveData and sets UpdateState to Success`() = runTest {
+    fun `setUser success updates user and state to Success`() = runTest {
         // Given
         val userResponse = UserResponse(
             id = 1,
@@ -126,10 +127,21 @@ class SettingsViewModelTest {
             createdAt = Date(),
             updatedAt = null
         )
-        coEvery { userRepository.setUser(any()) } returns Result.Success(userResponse)
+        val userRequest = UserRequest(
+            name = userResponse.name,
+            phone = userResponse.phone,
+            channel = UserChannel.SMS.name,
+            email = userResponse.email
+        )
+        coEvery { userRepository.getUser() } returns Result.Success(userResponse)
+        coEvery { userRepository.setUser(userResponse.id, userRequest) } returns Result.Success(userResponse)
+
+        // Ensure initial user state
+        viewModel.getUser()
+        testDispatcher.scheduler.advanceUntilIdle()
 
         // When
-        viewModel.setUser("EMAIL")
+        viewModel.setUser(UserChannel.SMS.name)
         testDispatcher.scheduler.advanceUntilIdle()
 
         // Then
@@ -140,30 +152,35 @@ class SettingsViewModelTest {
     @Test
     fun `setUser error updates state to Error`() = runTest {
         // Given
-        val errorMessage = "Error setting user"
-        coEvery { userRepository.setUser(any()) } returns Result.Error(errorMessage)
+        val userResponse = UserResponse(
+            id = 1,
+            authId = 123,
+            name = "John Doe",
+            phone = "1234567890",
+            channel = UserChannel.EMAIL,
+            companyId = 1001,
+            dni = "ABC123",
+            email = "john.doe@example.com",
+            importance = 5,
+            createdAt = Date(),
+            updatedAt = null
+        )
+        val errorMessage = "Error updating user"
+        coEvery { userRepository.getUser() } returns Result.Success(userResponse)
+        coEvery { userRepository.setUser(userResponse.id, any()) } returns Result.Error(errorMessage)
+
+        // Ensure initial user state
+        viewModel.getUser()
+        testDispatcher.scheduler.advanceUntilIdle()
 
         // When
-        viewModel.setUser("EMAIL")
+        viewModel.setUser(UserChannel.SMS.name)
         testDispatcher.scheduler.advanceUntilIdle()
 
         // Then
         verify { updateStateObserver.onChanged(UpdateState.Error(errorMessage)) }
     }
 
-    @Test
-    fun `setUser exception updates state to Error`() = runTest {
-        // Given
-        val exceptionMessage = "Unexpected error"
-        coEvery { userRepository.setUser(any()) } throws Exception(exceptionMessage)
-
-        // When
-        viewModel.setUser("EMAIL")
-        testDispatcher.scheduler.advanceUntilIdle()
-
-        // Then
-        verify { updateStateObserver.onChanged(UpdateState.Error(exceptionMessage)) }
-    }
 
     @Test
     fun `logout calls authRepository logout`() = runTest {
@@ -177,6 +194,40 @@ class SettingsViewModelTest {
         // Then
         coVerify { authRepository.logout() }
     }
+
+    @Test
+    fun `setUser exception updates state to Error`() = runTest {
+        // Given
+        val userResponse = UserResponse(
+            id = 1,
+            authId = 123,
+            name = "John Doe",
+            phone = "1234567890",
+            channel = UserChannel.EMAIL,
+            companyId = 1001,
+            dni = "ABC123",
+            email = "john.doe@example.com",
+            importance = 5,
+            createdAt = Date(),
+            updatedAt = null
+        )
+        val exceptionMessage = "Unexpected error occurred"
+
+        coEvery { userRepository.getUser() } returns Result.Success(userResponse)
+        coEvery { userRepository.setUser(userResponse.id, any()) } throws Exception(exceptionMessage)
+
+        // Ensure initial user state
+        viewModel.getUser()
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        // When
+        viewModel.setUser(UserChannel.SMS.name)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        // Then
+        verify { updateStateObserver.onChanged(UpdateState.Error(exceptionMessage)) }
+    }
+
 
     @Test
     fun `resetState updates state to Idle`() {
