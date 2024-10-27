@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -104,6 +105,7 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = hiltVi
             )
 
             Button(
+                modifier = Modifier.testTag("login_button"),
                 onClick = {
                     keyboardController?.hide()
                     viewModel.login(emailState.value, passwordState.value)
