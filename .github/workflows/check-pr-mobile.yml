@@ -34,3 +34,10 @@ jobs:
       # 5. Ejecutar las pruebas unitarias
       - name: Run Unit Tests
         run: ./gradlew test
+
+      # 6. Sube reporte de coverage
+      - name: Upload test report directory
+        uses: actions/upload-artifact@v4
+        with:
+          name: testDebugStuff
+          path: app/build/reports/tests/testDebugUnitTest/

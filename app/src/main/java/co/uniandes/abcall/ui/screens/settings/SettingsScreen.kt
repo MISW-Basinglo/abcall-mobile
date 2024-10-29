@@ -31,6 +31,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -203,6 +204,7 @@ fun SettingsScreen(navController: NavController, viewModel: SettingsViewModel = 
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     OutlinedButton(
+                        modifier = Modifier.testTag("logout_button"),
                         onClick = {
                             viewModel.logout()
                             navController.goAuth()
@@ -214,6 +216,7 @@ fun SettingsScreen(navController: NavController, viewModel: SettingsViewModel = 
                         )
                     }
                     Button(
+                        modifier = Modifier.testTag("update_button"),
                         enabled = user?.channel != channelState.value,
                         onClick = {
                             viewModel.setUser(channel = channelState.value?.name.orEmpty())
