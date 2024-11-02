@@ -28,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -49,7 +50,6 @@ fun IssuesScreen(navController: NavController, viewModel: IssuesViewModel = hilt
     val items by viewModel.issues.observeAsState(emptyList())
     val openItemDetailsDialog = remember { mutableStateOf(false) }
     val itemSolution = remember { mutableStateOf("") }
-    val listState = rememberLazyListState()
 
     val updateState by viewModel.updateState.observeAsState(UpdateState.Idle)
 
@@ -73,6 +73,7 @@ fun IssuesScreen(navController: NavController, viewModel: IssuesViewModel = hilt
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
+                modifier = Modifier.testTag("floatingActionButton"),
                 onClick = {
                     navController.goCreateIssue()
                 },

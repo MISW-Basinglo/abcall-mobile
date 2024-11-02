@@ -1,14 +1,11 @@
 package co.uniandes.abcall.di
 
 import co.uniandes.abcall.networking.AuthApi
-import co.uniandes.abcall.networking.LoginRequest
-import co.uniandes.abcall.networking.LoginResponse
-import co.uniandes.abcall.networking.TokenResponse
 import co.uniandes.abcall.storage.LocalStorage
 import com.google.gson.Gson
+import io.mockk.mockk
 import org.junit.Assert.assertNotNull
 import org.junit.Test
-import retrofit2.Response
 
 class NetworkModuleTest {
 
@@ -20,15 +17,8 @@ class NetworkModuleTest {
         override fun clearTokens() { }
     }
 
-    class Auth : AuthApi {
-        override suspend fun auth(request: LoginRequest): Response<LoginResponse> {
-            return Response.success(LoginResponse("",""))
-        }
-        override fun refreshAccessToken(refreshToken: String): Response<TokenResponse> {
-            return Response.success(TokenResponse(""))
-        }
+    private val authApi: AuthApi = mockk()
 
-    }
 
     @Test
     fun `test Gson instance`() {
@@ -38,7 +28,7 @@ class NetworkModuleTest {
 
     @Test
     fun `test AbcallApi instance`() {
-        val okHttpClient = NetworkModule.provideAbcallOkHttpClient(SharedStorage(), Auth())
+        val okHttpClient = NetworkModule.provideAbcallOkHttpClient(SharedStorage(), authApi)
         val abcallApi = NetworkModule.provideAbcallApi(Gson(), okHttpClient)
         assertNotNull(abcallApi)
     }

@@ -45,7 +45,7 @@ class AuthInterceptor @Inject constructor(
     private fun refreshAccessToken(): String? {
         val refreshToken = localStorage.getRefreshToken() ?: return null
 
-        val refreshResponse = api.refreshAccessToken(refreshToken)
+        val refreshResponse = api.refreshAccessToken("Bearer $refreshToken").execute()
 
         return if (refreshResponse.isSuccessful) {
             refreshResponse.body()?.accessToken

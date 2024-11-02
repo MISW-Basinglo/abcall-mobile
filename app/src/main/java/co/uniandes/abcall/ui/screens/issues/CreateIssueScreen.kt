@@ -30,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -204,6 +205,7 @@ fun CreateIssueScreen(navController: NavController, viewModel: CreateIssueViewMo
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     OutlinedButton(
+                        modifier = Modifier.testTag("cancel_button"),
                         onClick = { navController.goBack() }
                     ) {
                         Text(
@@ -212,6 +214,7 @@ fun CreateIssueScreen(navController: NavController, viewModel: CreateIssueViewMo
                         )
                     }
                     Button(
+                        modifier = Modifier.testTag("create_button"),
                         enabled = typeState.value != null && descriptionState.value.isNotEmpty(),
                         onClick = {
                             viewModel.createIssue(

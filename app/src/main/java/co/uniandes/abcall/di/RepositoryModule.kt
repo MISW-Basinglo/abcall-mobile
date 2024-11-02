@@ -6,6 +6,8 @@ import co.uniandes.abcall.data.repositories.chat.ChatRepository
 import co.uniandes.abcall.data.repositories.chat.ChatRepositoryImpl
 import co.uniandes.abcall.data.repositories.issues.IssuesRepository
 import co.uniandes.abcall.data.repositories.issues.IssuesRepositoryImpl
+import co.uniandes.abcall.data.repositories.user.UserRepository
+import co.uniandes.abcall.data.repositories.user.UserRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -29,5 +31,10 @@ abstract class RepositoryModule {
     abstract fun bindAuthRepository(
         authRepositoryImpl: AuthRepositoryImpl
     ): AuthRepository
+
+    @Binds
+    abstract fun bindUserRepository(
+        userRepositoryImpl: UserRepositoryImpl
+    ): UserRepository
 
 }

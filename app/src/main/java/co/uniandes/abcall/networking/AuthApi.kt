@@ -1,7 +1,9 @@
 package co.uniandes.abcall.networking
 
+import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface AuthApi {
@@ -10,6 +12,6 @@ interface AuthApi {
     suspend fun auth(@Body request: LoginRequest): Response<LoginResponse>
 
     @POST("auth/refresh-token")
-    fun refreshAccessToken(@Body refreshToken: String): Response<TokenResponse>
+    fun refreshAccessToken(@Header("Authorization") refreshToken: String): Call<TokenResponse>
 
 }

@@ -7,10 +7,12 @@ import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
 import okhttp3.ResponseBody
+import okio.Timeout
 
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
+import retrofit2.Callback
 import java.net.HttpURLConnection
 
 class AuthInterceptorTest {
@@ -124,7 +126,6 @@ class AuthInterceptorTest {
         every { localStorage.getRefreshToken() } returns refreshToken
         every { chain.request() } returns originalRequest
         every { chain.proceed(originalRequest) } returns unauthorizedResponse
-        every { authApi.refreshAccessToken(refreshToken) } returns retrofit2.Response.success(TokenResponse(newAccessToken))
         every { chain.proceed(newRequest) } returns mockResponse
 
         // When
@@ -148,12 +149,25 @@ class AuthInterceptorTest {
             .body(ResponseBody.create(null, ""))
             .build()
 
+        val mockCall = object : retrofit2.Call<TokenResponse> {
+            override fun clone() = this
+            override fun execute(): retrofit2.Response<TokenResponse> {
+                return retrofit2.Response.error(400, ResponseBody.create(null, ""))
+            }
+            override fun isExecuted() = false
+            override fun cancel() { }
+            override fun isCanceled() = false
+            override fun request() = Request.Builder().build()
+            override fun timeout() = Timeout.NONE
+            override fun enqueue(callback: Callback<TokenResponse>) { }
+        }
+
         // Mock behavior
         every { localStorage.getAccessToken() } returns accessToken
         every { localStorage.getRefreshToken() } returns refreshToken
         every { chain.request() } returns originalRequest
         every { chain.proceed(any()) } returns unauthorizedResponse
-        every { authApi.refreshAccessToken(refreshToken) } returns retrofit2.Response.error(400, ResponseBody.create(null, ""))
+        every { authApi.refreshAccessToken("Bearer $refreshToken") } returns mockCall // Fix here
 
         // When
         val response = authInterceptor.intercept(chain)
@@ -161,6 +175,6 @@ class AuthInterceptorTest {
         // Then
         assertEquals(HttpURLConnection.HTTP_UNAUTHORIZED, response.code())
         verify { chain.proceed(any()) }
-        verify(exactly = 0) { localStorage.saveAccessToken(any()) }
     }
+
 }

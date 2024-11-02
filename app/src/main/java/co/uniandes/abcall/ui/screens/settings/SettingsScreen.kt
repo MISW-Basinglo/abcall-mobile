@@ -22,6 +22,8 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -29,29 +31,53 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavController
 import co.uniandes.abcall.R
 import co.uniandes.abcall.data.models.UpdateState
+import co.uniandes.abcall.networking.UserChannel
 import co.uniandes.abcall.ui.navigation.BottomBar
 import co.uniandes.abcall.ui.navigation.goAuth
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(navController: NavController, viewModel: SettingsViewModel = hiltViewModel()) {
+    val user by viewModel.user.observeAsState()
 
     val updateState by viewModel.updateState.observeAsState(UpdateState.Idle)
 
     val nameState = remember { mutableStateOf("") }
     val emailState = remember { mutableStateOf("") }
     val phoneState = remember { mutableStateOf("") }
-    val channelState = remember { mutableStateOf("") }
+    val channelState = remember { mutableStateOf<UserChannel?>(null) }
+
+    LaunchedEffect (user) {
+        user?.let {
+            nameState.value = it.name
+            emailState.value = it.email
+            phoneState.value = it.phone
+            channelState.value = it.channel
+        }
+    }
 
     val expanded = remember { mutableStateOf(false) }
-    val typeOptions = listOf("Correo", "Llamada")
+
+    val lifecycleOwner = LocalLifecycleOwner.current
+
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) viewModel.getUser()
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+    }
 
     Scaffold(
         bottomBar = {
@@ -143,7 +169,7 @@ fun SettingsScreen(navController: NavController, viewModel: SettingsViewModel = 
                     ) {
                         OutlinedTextField(
                             readOnly = true,
-                            value = channelState.value,
+                            value = channelState.value?.name.orEmpty(),
                             onValueChange = { },
                             trailingIcon = {
                                 ExposedDropdownMenuDefaults.TrailingIcon(
@@ -161,9 +187,9 @@ fun SettingsScreen(navController: NavController, viewModel: SettingsViewModel = 
                             expanded = expanded.value,
                             onDismissRequest = { expanded.value = false }
                         ) {
-                            typeOptions.forEach { option ->
+                            UserChannel.entries.forEach { option ->
                                 DropdownMenuItem(
-                                    text = { Text(text = option) },
+                                    text = { Text(text = option.name) },
                                     onClick = {
                                         channelState.value = option
                                         expanded.value = false
@@ -178,6 +204,7 @@ fun SettingsScreen(navController: NavController, viewModel: SettingsViewModel = 
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     OutlinedButton(
+                        modifier = Modifier.testTag("logout_button"),
                         onClick = {
                             viewModel.logout()
                             navController.goAuth()
@@ -189,9 +216,10 @@ fun SettingsScreen(navController: NavController, viewModel: SettingsViewModel = 
                         )
                     }
                     Button(
-                        enabled = channelState.value.isNotEmpty(),
+                        modifier = Modifier.testTag("update_button"),
+                        enabled = user?.channel != channelState.value,
                         onClick = {
-                            viewModel.updateChannel(channelState.value)
+                            viewModel.setUser(channel = channelState.value?.name.orEmpty())
                         }
                     ) {
                         Text(
@@ -221,9 +249,9 @@ fun SettingsScreen(navController: NavController, viewModel: SettingsViewModel = 
                     Toast.makeText(navController.context, stringResource(id = R.string.successful), Toast.LENGTH_SHORT).show()
                 }
                 is UpdateState.Error -> {
+                    val errorMessage = (updateState as UpdateState.Error).message
+                    Toast.makeText(navController.context, errorMessage, Toast.LENGTH_SHORT).show()
                     viewModel.resetState()
-                    val errorMessage = (updateState as UpdateState.Error)
-                    Toast.makeText(navController.context, "errorMessage", Toast.LENGTH_SHORT).show()
                 }
                 else -> {}
             }
