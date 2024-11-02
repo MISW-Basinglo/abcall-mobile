@@ -6,10 +6,13 @@ import co.uniandes.abcall.MainActivity
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Before
+import org.junit.FixMethodOrder
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runners.MethodSorters
 
 @HiltAndroidTest
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 class LoginScreenTest {
 
     @get:Rule(order = 0)
@@ -64,7 +67,7 @@ class LoginScreenTest {
     }
 
     @Test
-    fun loginScreen_navigatesToMainScreen_whenLoginSucceeds() {
+    fun zz_loginScreen_navigatesToMainScreen_whenLoginSucceeds() {
         composeTestRule.onNodeWithText("Correo").performTextInput("user@example.com")
         composeTestRule.onNodeWithText("Contraseña").performTextInput("userpass")
 
