@@ -69,6 +69,7 @@ dependencies {
     implementation(libs.dagger.hilt)
     implementation(libs.androidx.runtime.livedata)
     implementation(libs.jwt.decode)
+    implementation(libs.multiplatform.markdown.renderer.m3)
 
     kapt(libs.dagger.hilt.compiler)
     kaptAndroidTest(libs.dagger.hilt.compiler)

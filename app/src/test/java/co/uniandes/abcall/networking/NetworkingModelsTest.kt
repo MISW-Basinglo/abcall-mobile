@@ -123,7 +123,7 @@ class NetworkingModelsTest {
         val description = "This is a suggestion."
         val response = SuggestResponse(description)
 
-        assertEquals(description, response.description)
+        assertEquals(description, response.solution)
     }
 
     @Test

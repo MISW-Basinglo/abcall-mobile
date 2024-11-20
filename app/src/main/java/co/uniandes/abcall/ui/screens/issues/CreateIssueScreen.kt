@@ -1,6 +1,7 @@
 package co.uniandes.abcall.ui.screens.issues
 
 import android.widget.Toast
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,6 +11,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -42,22 +45,39 @@ import co.uniandes.abcall.data.models.IAState
 import co.uniandes.abcall.data.models.UpdateState
 import co.uniandes.abcall.networking.IssueType
 import co.uniandes.abcall.ui.components.FullLoading
+import co.uniandes.abcall.ui.components.MinimalDialog
 import co.uniandes.abcall.ui.navigation.TopBar
 import co.uniandes.abcall.ui.navigation.goBack
 import co.uniandes.abcall.ui.utils.getIssueTypeText
+import com.mikepenz.markdown.m3.Markdown
+import com.mikepenz.markdown.m3.markdownColor
+import com.mikepenz.markdown.m3.markdownTypography
+import com.mikepenz.markdown.model.MarkdownTypography
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateIssueScreen(navController: NavController, viewModel: CreateIssueViewModel = hiltViewModel()) {
+fun CreateIssueScreen(
+    navController: NavController,
+    viewModel: CreateIssueViewModel = hiltViewModel()
+) {
     val typeState = remember { mutableStateOf<IssueType?>(null) }
     val descriptionState = remember { mutableStateOf("") }
     val expanded = remember { mutableStateOf(false) }
+    val openItemDetailsDialog = remember { mutableStateOf(false) }
 
     val updateState by viewModel.updateState.observeAsState(UpdateState.Idle)
     val iaState by viewModel.iaState.observeAsState(IAState.Idle)
     val suggestState by viewModel.suggestState.observeAsState("")
 
     val keyboardController = LocalSoftwareKeyboardController.current
+
+
+    if (openItemDetailsDialog.value) {
+        MinimalDialog(
+            onDismissRequest = { openItemDetailsDialog.value = false },
+            text = suggestState
+        )
+    }
 
     Scaffold(
         topBar = {
@@ -99,7 +119,12 @@ fun CreateIssueScreen(navController: NavController, viewModel: CreateIssueViewMo
                                 )
                             },
                             label = { Text(text = stringResource(id = R.string.type_issue)) },
-                            placeholder = { Text(text = stringResource(id = R.string.type_issue), color = Color.Gray) },
+                            placeholder = {
+                                Text(
+                                    text = stringResource(id = R.string.type_issue),
+                                    color = Color.Gray
+                                )
+                            },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .menuAnchor()
@@ -129,15 +154,19 @@ fun CreateIssueScreen(navController: NavController, viewModel: CreateIssueViewMo
                             }
                         },
                         maxLines = 5,
-                        label = { Text(
-                            text = stringResource(id = R.string.description),
-                            style = MaterialTheme.typography.bodyMedium
-                        ) },
-                        placeholder = { Text(
-                            text = stringResource(id = R.string.description),
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = Color.Gray
-                        ) },
+                        label = {
+                            Text(
+                                text = stringResource(id = R.string.description),
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        },
+                        placeholder = {
+                            Text(
+                                text = stringResource(id = R.string.description),
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = Color.Gray
+                            )
+                        },
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(200.dp)
@@ -154,16 +183,21 @@ fun CreateIssueScreen(navController: NavController, viewModel: CreateIssueViewMo
                         is IAState.Loading -> {
                             FullLoading(color = Color.White)
                         }
+
                         is IAState.Success -> {
                             viewModel.resetState()
                         }
+
                         is IAState.Error -> {
                             viewModel.resetState()
                             val errorMessage = (iaState as IAState.Error).message
-                            Toast.makeText(navController.context, errorMessage, Toast.LENGTH_SHORT).show()
+                            Toast.makeText(navController.context, errorMessage, Toast.LENGTH_SHORT)
+                                .show()
                         }
+
                         else -> {
                             Button(
+                                modifier = Modifier.testTag("suggest_button"),
                                 enabled = typeState.value != null && descriptionState.value.isNotEmpty(),
                                 onClick = {
                                     keyboardController?.hide()
@@ -178,25 +212,41 @@ fun CreateIssueScreen(navController: NavController, viewModel: CreateIssueViewMo
                                 Icon(
                                     painter = painterResource(id = R.drawable.ic_gemini),
                                     contentDescription = stringResource(id = R.string.suggest_content_description),
-                                    modifier = Modifier.size(30.dp).padding(start = 5.dp)
+                                    modifier = Modifier
+                                        .size(30.dp)
+                                        .padding(start = 5.dp)
                                 )
                             }
                         }
                     }
 
-                    if(suggestState.isNotEmpty()){
+                    if (suggestState.isNotEmpty()) {
                         Text(
-                            modifier = Modifier.padding(top = 43.dp, bottom = 8.dp),
+                            modifier = Modifier
+                                .padding(top = 43.dp, bottom = 8.dp)
+                                .testTag("suggest_title"),
                             text = stringResource(id = R.string.recommendations),
                             style = MaterialTheme.typography.bodySmall,
                             color = Color.Gray,
                         )
-
-                        Text(
-                            text = suggestState,
-                            style = MaterialTheme.typography.bodySmall,
-                            color = colorResource(id = R.color.grey_medium),
-                        )
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(150.dp)
+                                .verticalScroll(rememberScrollState())
+                                .clickable {
+                                    openItemDetailsDialog.value = true
+                                }
+                                .padding(8.dp)
+                        ) {
+                            Markdown(
+                                content = suggestState,
+                                modifier = Modifier.fillMaxWidth()
+                                    .testTag("suggest_text"),
+                                colors = markdownColor(text = colorResource(id = R.color.grey_medium)),
+                                typography = markdownTypography(h1 = MaterialTheme.typography.bodySmall),
+                            )
+                        }
                     }
 
                 }
@@ -236,16 +286,23 @@ fun CreateIssueScreen(navController: NavController, viewModel: CreateIssueViewMo
                 is UpdateState.Loading -> {
                     FullLoading()
                 }
+
                 is UpdateState.Success -> {
                     viewModel.resetState()
-                    Toast.makeText(navController.context, stringResource(id = R.string.successful), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        navController.context,
+                        stringResource(id = R.string.successful),
+                        Toast.LENGTH_SHORT
+                    ).show()
                     navController.goBack()
                 }
+
                 is UpdateState.Error -> {
                     val errorMessage = (updateState as UpdateState.Error).message
                     Toast.makeText(navController.context, errorMessage, Toast.LENGTH_SHORT).show()
                     viewModel.resetState()
                 }
+
                 else -> {}
             }
 

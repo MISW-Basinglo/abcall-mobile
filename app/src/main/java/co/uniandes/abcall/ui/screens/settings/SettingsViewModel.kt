@@ -29,8 +29,10 @@ class SettingsViewModel  @Inject constructor(
     fun getUser() {
         viewModelScope.launch {
             try {
+                _updateState.value = UpdateState.Loading
                 when (val result = userRepository.getUser()) {
                     is Result.Success -> {
+                        _updateState.value = UpdateState.Idle
                         _user.value = result.data
                     }
                     is Result.Error -> _updateState.value = UpdateState.Error(result.message)
@@ -44,6 +46,7 @@ class SettingsViewModel  @Inject constructor(
     fun setUser(channel: String) {
         viewModelScope.launch {
             try {
+                _updateState.value = UpdateState.Loading
                 _user.value?.let {
                     val user = UserRequest(it.name, it.phone, channel, it.email)
                     when (val result = userRepository.setUser(it.id, user)

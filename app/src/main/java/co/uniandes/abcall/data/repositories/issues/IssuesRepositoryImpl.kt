@@ -7,6 +7,8 @@ import co.uniandes.abcall.networking.IssueResponse
 import co.uniandes.abcall.networking.IssueSource
 import co.uniandes.abcall.networking.Result
 import co.uniandes.abcall.networking.ServerErrorMessage
+import co.uniandes.abcall.networking.SuggestRequest
+import co.uniandes.abcall.networking.SuggestResponse
 import com.google.gson.Gson
 import javax.inject.Inject
 
@@ -14,8 +16,8 @@ class IssuesRepositoryImpl @Inject constructor(
     private val api: AbcallApi
 ): IssuesRepository {
 
-    override suspend fun getIssues(): Result<List<IssueResponse>> {
-        val response = api.getIssues()
+    override suspend fun getIssues(userId: Int): Result<List<IssueResponse>> {
+        val response = api.getIssues(userId)
         return if (response.isSuccessful) {
             response.body()?.let { issuesResponse ->
                 return Result.Success(issuesResponse.data)
@@ -39,9 +41,17 @@ class IssuesRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun suggestIssue(description: String): String {
-        //api.suggestIssue(SuggestRequest(description))
-        return "Al completar el campo de descripción, asegúrate de incluir información clara y detallada sobre el incidente. Describe el problema específico que estás enfrentando, incluyendo pasos que llevaron al inconveniente, cualquier mensaje de error que hayas recibido y el impacto que tiene en tu actividad. Cuanta más información proporciones, más fácil será para nuestro equipo entender y resolver tu solicitud de manera eficiente."
+    override suspend fun suggestIssue(description: String): Result<SuggestResponse> {
+        val issue = SuggestRequest(description)
+        val response = api.suggestIssue(issue)
+        return if (response.isSuccessful) {
+            response.body()?.let { issuesResponse ->
+                return Result.Success(issuesResponse)
+            } ?: Result.Error(ServerErrorMessage.GENERIC_ERROR)
+        } else {
+            val gson = Gson().fromJson(response.errorBody()?.charStream(), ErrorResponse::class.java)
+            Result.Error(gson.message)
+        }
     }
 
 }

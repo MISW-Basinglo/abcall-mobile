@@ -3,7 +3,6 @@ package co.uniandes.abcall.screens.issues
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import co.uniandes.abcall.MainActivity
-import co.uniandes.abcall.networking.IssueType
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Before
@@ -78,6 +77,21 @@ class CreateIssueScreenTest {
             composeTestRule.onNodeWithTag("cancel_button").isNotDisplayed()
         }
         composeTestRule.onNodeWithTag("floatingActionButton").isDisplayed()
+    }
+
+    @Test
+    fun createIssueScreen_suggestIssueCorrectly() {
+        composeTestRule.onNodeWithText("Tipo de incidente").performClick()
+        composeTestRule.onNodeWithText("Solicitud").performClick()
+        composeTestRule.onNodeWithText("Descripción").performTextInput(
+            "This is a test issue description."
+        )
+        composeTestRule.onNodeWithTag("suggest_button").assertIsEnabled()
+        composeTestRule.onNodeWithTag("suggest_button").performClick()
+        composeTestRule.waitUntil(3000L){
+            composeTestRule.onNodeWithTag("suggest_title").isDisplayed()
+        }
+        composeTestRule.onNodeWithTag("suggest_text").isDisplayed()
     }
 
 }

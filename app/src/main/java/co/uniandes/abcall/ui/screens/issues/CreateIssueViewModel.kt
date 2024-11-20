@@ -50,9 +50,13 @@ class CreateIssueViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 _iaState.value = IAState.Loading
-                delay(2000)
-                _suggestState.value = repository.suggestIssue(description)
-                _iaState.value = IAState.Success
+                when (val result = repository.suggestIssue(description)) {
+                    is Result.Success -> {
+                        _iaState.value = IAState.Success
+                        _suggestState.value = result.data.solution
+                    }
+                    is Result.Error -> _iaState.value = IAState.Idle
+                }
             } catch (e: Exception) {
                 _updateState.value = UpdateState.Error(e.localizedMessage.orEmpty())
             }
