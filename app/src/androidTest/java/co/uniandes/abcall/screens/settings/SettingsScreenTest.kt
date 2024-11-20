@@ -57,6 +57,9 @@ class SettingsScreenTest {
 
     @Test
     fun settingsScreen_logoutCorrectly() {
+        composeTestRule.waitUntil(5000L){
+            composeTestRule.onNodeWithTag("loading").isNotDisplayed()
+        }
         composeTestRule.onNodeWithTag("logout_button").performClick()
         composeTestRule.waitUntil(3000L){
             composeTestRule.onNodeWithTag("logout_button").isNotDisplayed()
@@ -66,6 +69,10 @@ class SettingsScreenTest {
 
     @Test
     fun settingsScreen_updateChannelCorrectly() {
+        composeTestRule.waitUntil(5000L){
+            composeTestRule.onNodeWithTag("loading").isNotDisplayed()
+        }
+
         var channel = ""
         if(composeTestRule.onNodeWithText("SMS").isDisplayed()){
             composeTestRule.onNodeWithText("Canal de comunicación").performClick()
