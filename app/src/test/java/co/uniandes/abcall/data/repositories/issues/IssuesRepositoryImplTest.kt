@@ -43,10 +43,10 @@ class IssuesRepositoryImplTest {
         val response = Response.success(IssuesListResponse(1, issueResponseList))
 
         // Mock behavior
-        coEvery { api.getIssues() } returns response
+        coEvery { api.getIssues(1) } returns response
 
         // When
-        val result = issuesRepository.getIssues()
+        val result = issuesRepository.getIssues(1)
 
         // Then
         assert(result is Result.Success)
@@ -59,10 +59,10 @@ class IssuesRepositoryImplTest {
         val response = Response.success<IssuesListResponse>(null)
 
         // Mock behavior
-        coEvery { api.getIssues() } returns response
+        coEvery { api.getIssues(1) } returns response
 
         // When
-        val result = issuesRepository.getIssues()
+        val result = issuesRepository.getIssues(1)
 
         // Then
         assert(result is Result.Error)
@@ -80,10 +80,10 @@ class IssuesRepositoryImplTest {
         val response = Response.error<IssuesListResponse>(400, responseBody)
 
         // Mock behavior
-        coEvery { api.getIssues() } returns response
+        coEvery { api.getIssues(1) } returns response
 
         // When
-        val result = issuesRepository.getIssues()
+        val result = issuesRepository.getIssues(1)
 
         // Then
         assert(result is Result.Error)
@@ -151,11 +151,60 @@ class IssuesRepositoryImplTest {
     fun `suggestIssue returns correct suggestion`() = runBlocking {
         // Given
         val description = "Issue description"
+        val solution = "Esto es una respuesta"
+        val issueRequest = SuggestRequest(description)
+        val response = Response.success<SuggestResponse>(SuggestResponse(solution))
+
+        // Mock behavior
+        coEvery { api.suggestIssue(issueRequest) } returns response
 
         // When
         val suggestion = issuesRepository.suggestIssue(description)
 
         // Then
-        assertEquals("Al completar el campo de descripción, asegúrate de incluir información clara y detallada sobre el incidente. Describe el problema específico que estás enfrentando, incluyendo pasos que llevaron al inconveniente, cualquier mensaje de error que hayas recibido y el impacto que tiene en tu actividad. Cuanta más información proporciones, más fácil será para nuestro equipo entender y resolver tu solicitud de manera eficiente.", suggestion)
+        assert(suggestion is Result.Success)
+        assertEquals(solution, (suggestion as Result.Success).data.solution)
     }
+
+
+    @Test
+    fun `suggestIssue returns error result when response body is null`() = runBlocking {
+        // Given
+        val issueRequest = SuggestRequest("Issue description")
+        val response = Response.success<SuggestResponse>(null)
+
+        // Mock behavior
+        coEvery { api.suggestIssue(issueRequest) } returns response
+
+        // When
+        val result = issuesRepository.suggestIssue( "Issue description")
+
+        // Then
+        assert(result is Result.Error)
+        assertEquals(ServerErrorMessage.GENERIC_ERROR, (result as Result.Error).message)
+    }
+
+    @Test
+    fun `suggestIssue returns error result when response is unsuccessful`() = runBlocking {
+        // Given
+        val issueRequest = SuggestRequest("Issue description")
+        val errorMessage = "Error creating issue"
+        val errorResponse = ErrorResponse(errorMessage, "Error")
+        val errorBodyJson = Gson().toJson(errorResponse)
+        val responseBody = ResponseBody.create(MediaType.get("application/json"), errorBodyJson)
+
+        val response = Response.error<SuggestResponse>(400, responseBody)
+
+        // Mock behavior
+        coEvery { api.suggestIssue(issueRequest) } returns response
+
+        // When
+        val result = issuesRepository.suggestIssue("Issue description")
+
+        // Then
+        assert(result is Result.Error)
+        assertEquals(errorMessage, (result as Result.Error).message)
+    }
+
+
 }

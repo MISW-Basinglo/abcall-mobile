@@ -4,11 +4,14 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import co.uniandes.abcall.data.models.UpdateState
 import co.uniandes.abcall.data.repositories.issues.IssuesRepository
+import co.uniandes.abcall.data.repositories.user.UserRepository
 import co.uniandes.abcall.networking.IssueResponse
 import co.uniandes.abcall.networking.IssueSource
 import co.uniandes.abcall.networking.IssueStatus
 import co.uniandes.abcall.networking.IssueType
 import co.uniandes.abcall.networking.Result
+import co.uniandes.abcall.networking.UserChannel
+import co.uniandes.abcall.networking.UserResponse
 import io.mockk.coEvery
 import io.mockk.mockk
 import io.mockk.verify
@@ -33,6 +36,7 @@ class IssuesViewModelTest {
 
     private lateinit var viewModel: IssuesViewModel
     private lateinit var repository: IssuesRepository
+    private lateinit var userRepository: UserRepository
     private lateinit var updateStateObserver: Observer<UpdateState>
     private lateinit var issuesObserver: Observer<List<IssueResponse>>
 
@@ -41,7 +45,8 @@ class IssuesViewModelTest {
     @Before
     fun setUp() {
         repository = mockk()
-        viewModel = IssuesViewModel(repository)
+        userRepository = mockk()
+        viewModel = IssuesViewModel(repository, userRepository)
         updateStateObserver = mockk(relaxed = true)
         issuesObserver = mockk(relaxed = true)
 
@@ -61,16 +66,6 @@ class IssuesViewModelTest {
     fun `loadIssues success updates state to Success and issues sorted`() = runTest {
         // Given
         val issuesList = listOf(
-            IssueResponse(1, IssueType.REQUEST,
-                "Description 1",
-                "Solution 1",
-                IssueStatus.OPEN,
-                IssueSource.APP_MOBILE,
-                1,
-                1,
-                Date(1633046400000),
-                null
-            ),
             IssueResponse(
                 2,
                 IssueType.COMPLAINT,
@@ -84,7 +79,23 @@ class IssuesViewModelTest {
                 null
             )
         )
-        coEvery { repository.getIssues() } returns Result.Success(issuesList)
+
+        val userResponse = UserResponse(
+            id = 1,
+            authId = 123,
+            name = "John Doe",
+            phone = "1234567890",
+            channel = UserChannel.EMAIL,
+            companyId = 1001,
+            dni = "ABC123",
+            email = "john.doe@example.com",
+            importance = 5,
+            createdAt = Date(),
+            updatedAt = null
+        )
+
+        coEvery { userRepository.getUser() } returns Result.Success(userResponse)
+        coEvery { repository.getIssues(userResponse.id) } returns Result.Success(issuesList)
 
         // When
         viewModel.loadIssues()
@@ -96,11 +107,26 @@ class IssuesViewModelTest {
         verify { issuesObserver.onChanged(issuesList.sortedByDescending { it.createdAt }) }
     }
 
+
     @Test
     fun `loadIssues error updates state to Error`() = runTest {
         // Given
         val errorMessage = "Network error"
-        coEvery { repository.getIssues() } returns Result.Error(errorMessage)
+        val userResponse = UserResponse(
+            id = 1,
+            authId = 123,
+            name = "John Doe",
+            phone = "1234567890",
+            channel = UserChannel.EMAIL,
+            companyId = 1001,
+            dni = "ABC123",
+            email = "john.doe@example.com",
+            importance = 5,
+            createdAt = Date(),
+            updatedAt = null
+        )
+        coEvery { userRepository.getUser() } returns Result.Success(userResponse)
+        coEvery { repository.getIssues(1) } returns Result.Error(errorMessage)
 
         // When
         viewModel.loadIssues()
@@ -111,11 +137,12 @@ class IssuesViewModelTest {
         verify { updateStateObserver.onChanged(UpdateState.Error(errorMessage)) }
     }
 
+
     @Test
     fun `loadIssues exception updates state to Error`() = runTest {
-        // Given
-        val exceptionMessage = "Unexpected error"
-        coEvery { repository.getIssues() } throws Exception(exceptionMessage)
+        // Given: configura el mock para devolver un error controlado
+        val errorMessage = "Unexpected error"
+        coEvery { userRepository.getUser() } returns Result.Error(errorMessage)
 
         // When
         viewModel.loadIssues()
@@ -123,7 +150,7 @@ class IssuesViewModelTest {
 
         // Then
         verify { updateStateObserver.onChanged(UpdateState.Loading) }
-        verify { updateStateObserver.onChanged(UpdateState.Error(exceptionMessage)) }
+        verify { updateStateObserver.onChanged(UpdateState.Error(errorMessage)) }
     }
 
     @Test

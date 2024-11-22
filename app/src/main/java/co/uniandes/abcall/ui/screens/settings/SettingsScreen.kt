@@ -51,7 +51,7 @@ import co.uniandes.abcall.ui.navigation.goAuth
 fun SettingsScreen(navController: NavController, viewModel: SettingsViewModel = hiltViewModel()) {
     val user by viewModel.user.observeAsState()
 
-    val updateState by viewModel.updateState.observeAsState(UpdateState.Idle)
+    val updateState by viewModel.updateState.observeAsState(UpdateState.Loading)
 
     val nameState = remember { mutableStateOf("") }
     val emailState = remember { mutableStateOf("") }
@@ -239,7 +239,7 @@ fun SettingsScreen(navController: NavController, viewModel: SettingsViewModel = 
                             .clickable(enabled = false) {}
                     ) {
                         CircularProgressIndicator(
-                            modifier = Modifier.align(Alignment.Center),
+                            modifier = Modifier.align(Alignment.Center).testTag("loading"),
                             color = MaterialTheme.colorScheme.primary
                         )
                     }

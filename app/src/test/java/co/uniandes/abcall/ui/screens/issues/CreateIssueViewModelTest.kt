@@ -10,6 +10,7 @@ import co.uniandes.abcall.networking.IssueSource
 import co.uniandes.abcall.networking.IssueStatus
 import co.uniandes.abcall.networking.IssueType
 import co.uniandes.abcall.networking.Result
+import co.uniandes.abcall.networking.SuggestResponse
 import io.mockk.coEvery
 import io.mockk.mockk
 import io.mockk.verify
@@ -110,7 +111,7 @@ class CreateIssueViewModelTest {
         // Given
         val description = "Suggested issue description"
         val suggestion = "Suggested solution"
-        coEvery { repository.suggestIssue(description) } returns suggestion
+        coEvery { repository.suggestIssue(description) } returns Result.Success(SuggestResponse(suggestion))
 
         // When
         viewModel.suggestIssue(description)

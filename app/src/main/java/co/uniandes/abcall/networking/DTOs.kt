@@ -17,7 +17,7 @@ data class MessageRequest(
 )
 
 data class SuggestRequest(
-    @SerializedName("description") val description: String
+    @SerializedName("msg") val description: String
 )
 
 data class IssueRequest(
@@ -84,7 +84,7 @@ enum class IssueStatus {
 }
 
 data class SuggestResponse(
-    @SerializedName("description") val description: String
+    @SerializedName("text") val solution: String
 )
 
 data class LoginResponse(
